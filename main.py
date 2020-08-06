@@ -40,7 +40,7 @@ class Battler:
 		self.cover_object = cover
 		
 	def leave_cover(self):
-		self.cover_object = 0
+		self.cover_object = None
 		
 class Weapon:
 	CRITICAL_BONUS_PERCENT = 200
@@ -84,20 +84,22 @@ class Cover:
 		self.nodamage = nodamage
 		
 	def get_hit_bouns(self):
+		hit_bouns = self.hit_bouns
 		if self.hit_bouns <= 0:
-			self.hit_bouns = -self.hit_bouns
+			hit_bouns = -self.hit_bouns
 			
-		i = random.randrange(0, self.hit_bouns)
+		i = random.randrange(0, hit_bouns)
 		
 		if self.hit_bouns <= 0:
 			return -i
 		return i
 	
 	def get_evade_bouns(self):
+		evade_bouns = self.evade_bouns
 		if self.evade_bouns <= 0:
-			self.evade_bouns = -self.evade_bouns
+			evade_bouns = -self.evade_bouns
 			
-		i = random.randrange(0, self.evade_bouns)
+		i = random.randrange(0, evade_bouns)
 		
 		if self.evade_bouns <= 0:
 			return -i
@@ -124,13 +126,13 @@ weapons.append(Weapon("7.62x39mm LMG", 18, 10, 90, 12, -3))
 		
 battlers = []
 battlers.append(Battler("You", 3000))
-battlers.append(Battler("Magical girl", 12000))
+battlers.append(Battler("Magical girl", 9000))
 battlers[0].weapons.append(weapons[0])
 battlers[1].weapons.append(weapons[1])
 battlers[1].equip_weapon(1)
 
 covers = []
-covers.append(Cover("Forest", 10000, hit_bouns=-20, evade_bouns=40))
+covers.append(Cover("Forest", 10000, hit_bouns=-40, evade_bouns=40))
 covers.append(Cover("Street", 20000, hit_bouns=-30, evade_bouns=30))
 covers.append(Cover("Building", 10000, hit_bouns=-10, evade_bouns=10))
 covers.append(Cover("Sun", 99999, hit_bouns=20, evade_bouns=-20, nodamage=True))
@@ -149,6 +151,20 @@ def attack(target, hp):
 def get_rate():
 	return random.randrange(101)
 	
+def get_attacker_final_hit_percent(attacker):
+	attacker_hit_bouns = 0
+	wp = attacker.get_current_weapon()
+	if attacker.is_covered():
+		attacker_hit_bouns += attacker.cover_object.get_hit_bouns()
+	return attacker.hit_percent + wp.hit_percent_bouns + attacker_hit_bouns
+	
+def get_target_final_evade_percent(target):
+	target_evade_bouns = 0
+	if target.is_covered():
+		target_cover = target.cover_object
+		target_evade_bouns += target_cover.get_evade_bouns()
+	return target.evade_percent + target_evade_bouns + target_evade_bouns
+	
 def attack_in_turn(attacker, target):
 	total_damage = 0
 	total_hit = 0
@@ -160,31 +176,25 @@ def attack_in_turn(attacker, target):
 	
 	dmg = orig_dmg
 	
-	attacker_hit_bouns = 0
-	target_evade_bouns = 0
-	
 	target_is_covered = target.is_covered()
 	target_cover = None
 	
-	if attacker.is_covered():
-		attacker_hit_bouns += attacker.cover_object.get_hit_bouns()
-		
 	if target_is_covered:
 		target_cover = target.cover_object
-		target_evade_bouns += target_cover.get_evade_bouns()
-	
-	weapon_hit_percent = attacker.hit_percent + wp.hit_percent_bouns
 	
 	if wp:
 		for i in range(rps):
 			if wp.fire():
-				if get_rate() <= weapon_hit_percent + attacker_hit_bouns:
-					if get_rate() >= target.evade_percent + target_evade_bouns:
+				attacker_hit_percent = get_attacker_final_hit_percent(attacker)
+				target_evade_percent = get_target_final_evade_percent(target)
+	
+				if get_rate() <= attacker_hit_percent:
+					if get_rate() >= target_evade_percent:
 						if get_rate() <= critical_percent:
 							dmg *= int(Weapon.CRITICAL_BONUS_PERCENT / 100)
 							print("!CRIT! ", end="")
 							
-						print("[%s] " % dmg, end="")
+						print("{:>4} ".format(dmg), end="")
 						if attack(target, dmg):
 							total_hit += 1
 							total_damage += dmg
@@ -198,7 +208,10 @@ def attack_in_turn(attacker, target):
 				print(">AMMO OUT<")
 				break
 			
-			dmg = orig_dmg #Clear critical bonus		
+			dmg = orig_dmg #Clear critical bonus
+			
+			if (i + 1) % 5 == 0:
+				print("", end="\n")
 	
 	
 			
@@ -210,14 +223,14 @@ def show_damage(hit, dmg):
 	
 def show_covers():
 	print_hugebar("COVER")
-	print("{:<6} {:<10} {:<6}   {:<6} {:<6} {:<6}".format("INDEX", "NAME", "HP", "MAXHP", "HIT%", "EVADE%"))
+	print("{:<6} {:<10} {:<6}   {:<6} {:<9} {:<9}".format("INDEX", "NAME", "HP", "MAXHP", "HITMAX%", "EVADEMAX%"))
 	for i, j in enumerate(covers):
 		name = j.name
 		hp = j.hp
 		maxhp = j.maxhp
 		hit_bouns = j.hit_bouns
 		evade_bouns = j.evade_bouns
-		print("{:<6} {:<10} {:<6} / {:<6} {:<6} {:<6}".format(i + 1, name, hp, maxhp, hit_bouns, evade_bouns))
+		print("{:<6} {:<10} {:<6} / {:<6} {:<9} {:<9}".format(i + 1, name, hp, maxhp, hit_bouns, evade_bouns))
 		
 	print_hugebar()
 	
@@ -226,10 +239,19 @@ def choose_covers():
 	id = input("COVER COMMAND:>")
 	if id is ("`" and "0"):
 		return False
-	
+	if id is "w":
+		if battlers[0].is_covered():
+			print("[LEAVE COVER]")
+			battlers[0].leave_cover()
+			return True
+		else:
+			print("[NOT COVERED]")
+			return False
+		
 	id = int(id)
 	id -= 1
 	if covers[id].is_dead():
+		print("[COVER IS NOT USABLE]")
 		return False
 	
 	c = covers[id]
@@ -238,6 +260,7 @@ def choose_covers():
 	return True
 	
 def battler_reload(battler):
+	print("[RELOADING]")
 	wp = battler.get_current_weapon()
 	wp.reload()
 	
@@ -257,7 +280,6 @@ def command_perform(cmd_char):
 			return True
 		return False
 	elif cmd_char is "r":
-		print("RELOADING...")
 		battler_reload(battlers[0])
 		return True
 	else:
@@ -266,6 +288,10 @@ def command_perform(cmd_char):
 	return True
 	
 def enemy_action():
+	wp = battlers[1].get_current_weapon()
+	if wp.is_magazine_empty():
+		battler_reload(battlers[1])
+		return 
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
 	
@@ -288,6 +314,14 @@ def check_win():
 		print("You win")
 		sys.exit()
 		
+def check_cover(battler):
+	if not battler.is_covered():
+		return
+	c = battler.cover_object
+	if c.is_dead():
+		print("[COVER IS BROKEN]")
+		battler.leave_cover()
+		
 def print_batttlersStatus():
 	print("{:<15} {:<6}   {:<6}".format("NAME", "MANA", "MAXMN"))
 	for i in range(2):
@@ -295,15 +329,19 @@ def print_batttlersStatus():
 		hp = battlers[i].hp
 		maxhp = battlers[i].maxhp
 		print("{:<15} {:<6} / {:<6}".format(name, hp, maxhp))
+		
+def print_final_percent():
+	print("HIT%: {:<4} EVADE%: {:<4}".format(get_attacker_final_hit_percent(battlers[0]), get_target_final_evade_percent(battlers[0])))
 	
 def print_currentweapon(battler):
+	print("{:<3} {:<15} {:<5} {:<8}".format("ID", "NAME", "AMMO", "MAX"))
 	for j, i in enumerate(battler.weapons):
 		name = i.name
-		dmg = i.dmg
-		rps = i.rps
+		#dmg = i.dmg
+		#rps = i.rps
 		ammo = i.ammo
 		max_ammo = i.max_ammo
-		print("[%s] %s, DMG: %s, RPS: %s, Ammo: %s / %s" % (j + 1,name, dmg, rps, ammo, max_ammo))
+		print("[{:<2}] {:<15} {:<5} {:<8}".format(j + 1, name, ammo, max_ammo))
 		
 def print_currentCover(battler):
 	print("Current cover: ", end="")
@@ -327,13 +365,16 @@ def battle_scene():
 		print("[Second: %s]" % turn)
 		print_batttlersStatus()
 		print_currentCover(battlers[0])
+		print_bar("APPROXIMATE HIT/EVADE %")
+		print_final_percent()
 		print_hugebar()
+		
 		print_currentweapon(battlers[0])
 		print_commands()
 		
 		
 		while 1:
-			cmd = input("COMMAND?>")	
+			cmd = input("COMMAND?(LOW CASE)>")	
 			if cmd:
 				print_bar("PLAYER ACTION")
 				cmd_char = cmd[0]
@@ -341,11 +382,13 @@ def battle_scene():
 					break
 		
 		check_win()
+		check_cover(battlers[0])
 		
 		print_bar("ENEMY ACTION")
 		enemy_action()
 		
 		check_win()
+		check_cover(battlers[0])
 		
 			
 		turn += 1
