@@ -4,7 +4,6 @@ import sys
 class COLORS:
 	ENDC = '\033[0m'
 	RED = '\033[91m'
-	
 	GREEN = '\033[92m'
 	YELLOW = '\033[93m'
 	BLUE = '\033[94m'
@@ -65,7 +64,7 @@ class Battler:
 class Weapon:
 	CRITICAL_BONUS_PERCENT = 200
 	
-	def __init__(self, name, dmg, rps, ammo, critical_percent=0, hit_percent_bouns=0):
+	def __init__(self, name, desc, dmg, rps, ammo, critical_percent=0, hit_percent_bouns=0):
 		self.name = name
 		self.dmg = dmg
 		self.rps = rps
@@ -133,12 +132,37 @@ class Cover:
 		self.hp += hp
 		return True
 		
+class Status:
+	def __init__(self, name, keep_turn=0, hit_bouns=0, evade_bouns=0, can_move=True, hp_change=0):
+		self.name = name
+		self.keep_turn = keep_turn
+		self.hit_bouns = hit_bouns
+		self.evade_bouns = evade_bouns
+		self.can_move = can_move
+		self.hp_change = hp_change
 		
+class Skill:
+	def __init__(self, name, desc="", hp_cost=0, status=None):
+		self.name = name
+		self.desc = desc
+		self.hp_cost = hp_cost
+		self.status = status
+		self.shield = None
+		
+	def addShield(self, hp, hit_bouns=0, evade_bouns=0):
+		self.shield = Shield(hp, hit_bouns, evade_bouns)
+		
+class Shield:
+	def __init__(self, hp, hit_bouns=0, evade_bouns=0):
+		self.hp = hp
+		self.hit_bouns = 0
+		self.evade_bouns = 0
+	
 weapons = []
-weapons.append(Weapon("5.56x45mm LMG", 8, 15, 100, 4))
-weapons.append(Weapon("7.62x39mm LMG", 18, 10, 100, 12, -10))
-weapons.append(Weapon("12.7x99mm HMG", 30, 10, 100, 30, -30))
-weapons.append(Weapon("12.7x108mm HMG", 40, 12, 100, 35, -35))
+weapons.append(Weapon("5.56x45mm LMG", "A light machinegun made by Belgium", 8, 15, 100, 4))
+weapons.append(Weapon("7.62x39mm LMG", "A light machinegun made by USSR", 18, 10, 100, 12, -10))
+weapons.append(Weapon("12.7x99mm HMG", "A heavy machinegun made by USA", 30, 10, 100, 30, -30))
+weapons.append(Weapon("12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 12, 100, 35, -35))
 		
 battlers = []
 battlers.append(Battler("You", 3000))
@@ -150,10 +174,21 @@ battlers[1].equip_weapon(weapons[3])
 #battlers[1].hold_weapon(0)
 
 covers = []
-covers.append(Cover("Forest", 10000, hit_bouns=-40, evade_bouns=40))
-covers.append(Cover("Street", 20000, hit_bouns=-30, evade_bouns=30))
-covers.append(Cover("Building", 10000, hit_bouns=-20, evade_bouns=20))
-covers.append(Cover("Sun", 99999, hit_bouns=20, evade_bouns=-20, nodamage=True))
+covers.append(Cover("Forest", 10000, hit_bouns=-20, evade_bouns=40))
+covers.append(Cover("Street", 20000, hit_bouns=-10, evade_bouns=30))
+covers.append(Cover("Building", 10000, hit_bouns=0, evade_bouns=20))
+covers.append(Cover("Sun", 99999, hit_bouns=40, evade_bouns=-20, nodamage=True))
+
+status = []
+status.append(Status("BURN", 10, 20, 20, hp_change=-200))
+status.append(Status("SHOCK", 10, 50, 50, False, -40))
+status.append(Status("HEALING", 5, 0, 0, hp_change=100))
+status.append(Status("HEALING+", 600, 0, 0, hp_change=60))
+
+skills = []
+skills.append(Skill("FIRE", "Burn enemy", 80, status[0]))
+skills.append(Skill("ICE SHIELD", "Add shield to your self", 150))
+skills.append(Skill("BOLT", "Shock enemy", 100, status[1]))
 
 def print_hugebar(s=""):
 	print(s.center(80, "="))
@@ -230,8 +265,9 @@ def attack_in_turn(attacker, target):
 				if target_is_covered: #If evade or missed, cover takes damage
 					target_cover.hp_change(-dmg)
 			else:
-				print_without_enter(COLORS.BOLD)
+				print_without_enter(COLORS.RED)
 				print(">AMMO OUT<")
+				print_without_enter(COLORS.ENDC)
 				break
 				
 			print_without_enter(COLORS.ENDC)
@@ -251,7 +287,7 @@ def show_damage(hit, dmg):
 	
 def show_covers():
 	print_hugebar("COVER")
-	print("{:<6} {:<10} {:<6}	{:<6} {:<9} {:<9}".format("INDEX", "NAME", "HP", "MAXHP", "HITMAX%", "EVADEMAX%"))
+	print("{:<6} {:<10} {:<6}   {:<6} {:<9} {:<9}".format("INDEX", "NAME", "HP", "MAXHP", "HITMAX%", "EVADEMAX%"))
 	for i, j in enumerate(covers):
 		name = j.name
 		hp = j.hp
@@ -265,7 +301,7 @@ def show_covers():
 def choose_covers():
 	print("[W]:Leave cover, [`][0]:Exit")
 	id = input("COVER COMMAND:>")
-	if id is ("`" and "0"):
+	if id is "`" or id is "0":
 		return False
 	if id is "w":
 		if battlers[0].is_covered():
@@ -376,7 +412,7 @@ def check_cover(battler):
 		battler.leave_cover()
 		
 def print_batttlersStatus():
-	print("{:<15} {:<6}	  {:<6}".format("NAME", "MANA", "MAXMN"))
+	print("{:<15} {:<6}   {:<6}".format("NAME", "MANA", "MAXMN"))
 	for i in range(2):
 		name = battlers[i].name
 		hp = battlers[i].hp
@@ -408,10 +444,12 @@ def print_currentCover(battler):
 	print(" NO COVER")
 	
 def print_commands():
-	print("{:<12} {:<12} {:<12} {:<12}".format("[1]-[4]", "Switch weapon", "", ""))
-	print("{:<12} {:<12} {:<12} {:<12}".format("", "[W]:FIRE", "", "[R]:RELOAD"))
-	print("{:<12} {:<12} {:<12} {:<12}".format("", "[S]:TAKE COVER", "", ""))
-	
+	print("{:<16} {:<16} {:<16} {:<16}".format("[1]-[4]", "Switch weapon", "", ""))
+	print("{:<16} {:<16} {:<16} {:<16}".format("", "[W]:FIRE", "", "[R]:RELOAD"))
+	print("{:<16} {:<16} {:<16} {:<16}".format("", "[S]:TAKE COVER", "", ""))
+	print("{:<16} {:<16} {:<16} {:<16}".format("[Z]:" + skills[0].name,
+												"[X]:" + skills[1].name, 
+												"[C]:" + skills[2].name, ""))
 
 def battle_scene():
 	turn = 0;
@@ -426,6 +464,7 @@ def battle_scene():
 		print_hugebar()
 		
 		print_currentweapon(battlers[0])
+		print_hugebar()
 		print_commands()
 		
 		
