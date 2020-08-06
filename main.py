@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 class COLORS:
 	ENDC = '\033[0m'
@@ -171,6 +172,7 @@ class Cover:
 class Status:
 	def __init__(self, name, keep_turn=0, hit_bouns=0, evade_bouns=0, is_movable=True, hp_change=0):
 		self.name = name
+		self.hp = keep_turn
 		self.keep_turn = keep_turn
 		self.hit_bouns = hit_bouns
 		self.evade_bouns = evade_bouns
@@ -178,23 +180,40 @@ class Status:
 		self.hp_change = hp_change
 		
 	def reduce_keep_turn(self):
-		self.keep_turn -= 1
+		self.hp -= 1
 		
 	def is_dead(self):
-		if self.keep_turn != 0:
+		if self.hp != 0:
 			return False
+		self.hp = self.keep_turn
 		return True
 		
+		
 class Skill:
-	def __init__(self, name, desc="", hp_cost=0, status=None):
+	def __init__(self, name, desc="", hp_cost=0, status=None, cooldown_turn=0):
 		self.name = name
 		self.desc = desc
+		self.cooldown = 0
 		self.hp_cost = hp_cost
 		self.status = status
 		self.shield = None
+		self.cooldown_turn = cooldown_turn
 		
 	def addShield(self, hp, hit_bouns=0, evade_bouns=0):
 		self.shield = Shield(hp, hit_bouns, evade_bouns)
+		
+	def reduce_keep_turn(self):
+		self.cooldown -= 1
+		
+	def set_cooldown(self):
+		self.cooldown = self.cooldown_turn
+		
+	def is_cooldown(self):
+		if self.cooldown != 0:
+			return False
+		return True
+	
+	
 		
 class Shield:
 	def __init__(self, hp, hit_bouns=0, evade_bouns=0):
@@ -230,22 +249,22 @@ def init():
 	covers.append(Cover("Sun", 99999, hit_bouns=40, evade_bouns=-20, nodamage=True))
 
 
-	status.append(Status("BURN", 3, -5, -5, hp_change=-150))
-	status.append(Status("SHOCK", 3, -25, -25, False, -20))
+	status.append(Status("BURN", 5, -5, -5, hp_change=-150))
+	status.append(Status("SHOCK", 5, -25, -25, False, -20))
 	status.append(Status("HEALING", 5, 0, 0, hp_change=100))
 	status.append(Status("HEALING+", 600, 0, 0, hp_change=80))
 
-	skills.append(Skill("FIRE", "Burn enemy", 80, status[0]))
-	skills.append(Skill("ICE SHIELD", "Add shield to your self", 150))
-	skills.append(Skill("BOLT", "Shock enemy", 100, status[1]))
+	skills.append(Skill("FIRE", "Burn enemy", 80, status[0], 15))
+	skills.append(Skill("ICE SHIELD", "Add shield to your self", 150, 15))
+	skills.append(Skill("BOLT", "Shock enemy", 100, status[1], 15))
+	skills.append(Skill("HEAL", "Heal yourself", 0, cooldown_turn=30))
+	skills[3].hp_cost = -(battlers[0].hp / 2)
 	
 	for i in skills:
 		battlers[0].add_skill(i)
 		
 	battlers[1].add_status(status[3])
 		
-
-
 
 def print_hugebar(s=""):
 	print(s.center(80, "="))
@@ -333,9 +352,7 @@ def attack_in_turn(attacker, target):
 			
 			if (i + 1) % 10 == 0:
 				print("", end="\n")
-	
-	
-			
+		
 	print("")
 	return total_hit, total_damage
 
@@ -404,11 +421,17 @@ def print_playerinfo():
 	
 def use_skill(id):
 	s = battlers[0].skills[id]
+	if not s.is_cooldown():
+		return False
+	
+	s.set_cooldown()
 	battlers[0].hp_change(-s.hp_cost)
-	battlers[1].add_status(s.status)
+	if s.status:
+		battlers[1].add_status(s.status)
 	
 	print_bar("SKILL")
 	print("%s" % s.name)
+	return True
 	
 def command_perform(cmd_char):
 	if cmd_char is "w":
@@ -429,14 +452,13 @@ def command_perform(cmd_char):
 		battler_reload(battlers[0])
 		return True
 	elif cmd_char is "z":
-		use_skill(0)
-		return True
+		return use_skill(0)
 	elif cmd_char is "x":
-		use_skill(1)
-		return True
+		return use_skill(1)
 	elif cmd_char is "c":
-		use_skill(2)
-		return True
+		return use_skill(2)
+	elif cmd_char is "v":
+		return use_skill(3)
 	elif cmd_char is "i":
 		print_playerinfo()
 		return False
@@ -522,6 +544,11 @@ def check_status():
 			j.reduce_keep_turn()
 			
 		
+def update_skill_cooldown():
+	for i in battlers[0].skills:
+		if not i.is_cooldown():
+			i.reduce_keep_turn()
+		
 def print_battlersStatus():
 	print("{:<15} {:<6}   {:<6} {:<6}".format("NAME", "MANA", "MAXMN", "STATUS"))
 	for i in range(2):
@@ -579,10 +606,21 @@ def print_commands():
 		return
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[Z]:" + skills[0].name,
 												"[X]:" + skills[1].name, 
-												"[C]:" + skills[2].name, "", ""))
+												"[C]:" + skills[2].name,
+												"[V]:" + skills[3].name,
+												"SKILLS"))
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format(skills[0].hp_cost,
 												skills[1].hp_cost, 
-												skills[2].hp_cost, "", ""))
+												skills[2].hp_cost,
+												skills[3].hp_cost,
+												"HP COST"))
+	print_without_enter(COLORS.GREEN)
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format(skills[0].cooldown,
+												skills[1].cooldown, 
+												skills[2].cooldown,
+												skills[3].cooldown,
+												"COOLDOWN"))
+	print_without_enter(COLORS.ENDC)
 
 def battle_scene():
 	turn = 0;
@@ -618,6 +656,7 @@ def battle_scene():
 		enemy_action()
 		
 		check_status()
+		update_skill_cooldown()
 		
 		check_win()
 		check_cover(battlers[0])
