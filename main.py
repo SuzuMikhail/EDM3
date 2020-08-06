@@ -10,11 +10,10 @@ class Battler:
 		self.current_weapon_id = 0
 		self.cover = 0
 		self.hit_percent = 90
-		self.evade_percent = 60
+		self.evade_percent = 40
 		self.cover_object = None
 		
 	def is_dead(self):
-		#print("is_dead(): hp: %s" % self.hp)
 		if self.hp <= 0:
 			return True
 		return False
@@ -59,17 +58,11 @@ class Weapon:
 			self.ammo -= 1
 			return True
 		return False
-			
-		
+				
 	def is_magazine_empty(self):
 		if self.ammo <= 0:
 			return True
 		return False
-		
-	"""def is_magazine_full(self):
-		if self.ammo == self.max_ammo:
-			return True
-		return False"""
 		
 	def reload(self):
 		self.ammo = self.max_ammo
@@ -122,7 +115,9 @@ class Cover:
 		
 weapons = []
 weapons.append(Weapon("5.56x45mm LMG", 8, 15, 300, 4))
-weapons.append(Weapon("7.62x39mm LMG", 18, 10, 90, 12, -3))
+weapons.append(Weapon("7.62x39mm LMG", 18, 10, 300, 12, -3))
+weapons.append(Weapon("12.7x99mm HMG", 60, 10, 900, 30, -15))
+weapons.append(Weapon("12.7x108mm HMG", 80, 12, 1000, 35, -20))
 		
 battlers = []
 battlers.append(Battler("You", 3000))
@@ -134,7 +129,7 @@ battlers[1].equip_weapon(1)
 covers = []
 covers.append(Cover("Forest", 10000, hit_bouns=-40, evade_bouns=40))
 covers.append(Cover("Street", 20000, hit_bouns=-30, evade_bouns=30))
-covers.append(Cover("Building", 10000, hit_bouns=-10, evade_bouns=10))
+covers.append(Cover("Building", 10000, hit_bouns=-20, evade_bouns=20))
 covers.append(Cover("Sun", 99999, hit_bouns=20, evade_bouns=-20, nodamage=True))
 
 def print_hugebar(s=""):
@@ -163,7 +158,7 @@ def get_target_final_evade_percent(target):
 	if target.is_covered():
 		target_cover = target.cover_object
 		target_evade_bouns += target_cover.get_evade_bouns()
-	return target.evade_percent + target_evade_bouns + target_evade_bouns
+	return target.evade_percent + target_evade_bouns
 	
 def attack_in_turn(attacker, target):
 	total_damage = 0
@@ -376,7 +371,7 @@ def battle_scene():
 		while 1:
 			cmd = input("COMMAND?(LOW CASE)>")	
 			if cmd:
-				print_bar("PLAYER ACTION")
+				#print_bar("PLAYER ACTION")
 				cmd_char = cmd[0]
 				if command_perform(cmd_char):
 					break
