@@ -9,9 +9,10 @@ class COLORS:
 	BLUE = '\033[94m'
 	MAGENTA = '\033[95m'
 	CYAN = '\033[96m'
+	BOLD = '\033[01m'
 
 class Battler:
-	def __init__(self, name, maxhp, orig_hit_percent=90, orig_evade_percent=40):
+	def __init__(self, name, maxhp, orig_hit_percent=95, orig_evade_percent=30):
 		self.name = name
 		self.hp = maxhp;
 		self.maxhp = maxhp
@@ -215,7 +216,7 @@ def init():
 			
 
 	battlers.append(Battler("You", 3000))
-	battlers.append(Battler("Magical girl", 9000))
+	battlers.append(Battler("Magical girl", 9000, orig_evade_percent=25))
 	battlers[0].equip_weapon(weapons[0])
 	battlers[0].equip_weapon(weapons[2])
 	battlers[1].equip_weapon(weapons[1])
@@ -229,10 +230,10 @@ def init():
 	covers.append(Cover("Sun", 99999, hit_bouns=40, evade_bouns=-20, nodamage=True))
 
 
-	status.append(Status("BURN", 10, -20, -20, hp_change=-200))
-	status.append(Status("SHOCK", 10, -50, -50, False, -40))
+	status.append(Status("BURN", 3, -5, -5, hp_change=-150))
+	status.append(Status("SHOCK", 3, -25, -25, False, -20))
 	status.append(Status("HEALING", 5, 0, 0, hp_change=100))
-	status.append(Status("HEALING+", 600, 0, 0, hp_change=60))
+	status.append(Status("HEALING+", 600, 0, 0, hp_change=80))
 
 	skills.append(Skill("FIRE", "Burn enemy", 80, status[0]))
 	skills.append(Skill("ICE SHIELD", "Add shield to your self", 150))
@@ -401,6 +402,14 @@ def print_playerinfo():
 	print_bar("SKILLS")
 	print_skills(battlers[0])
 	
+def use_skill(id):
+	s = battlers[0].skills[id]
+	battlers[0].hp_change(-s.hp_cost)
+	battlers[1].add_status(s.status)
+	
+	print_bar("SKILL")
+	print("%s" % s.name)
+	
 def command_perform(cmd_char):
 	if cmd_char is "w":
 		wp = battlers[0].get_current_weapon()
@@ -418,6 +427,15 @@ def command_perform(cmd_char):
 		return False
 	elif cmd_char is "r":
 		battler_reload(battlers[0])
+		return True
+	elif cmd_char is "z":
+		use_skill(0)
+		return True
+	elif cmd_char is "x":
+		use_skill(1)
+		return True
+	elif cmd_char is "c":
+		use_skill(2)
 		return True
 	elif cmd_char is "i":
 		print_playerinfo()
@@ -444,6 +462,9 @@ def command_perform(cmd_char):
 	return True
 	
 def enemy_action():
+	if battlers[1].is_movable == False:
+		print("[SHOCKED]")
+		return
 	wp = battlers[1].get_current_weapon()
 	if wp.is_magazine_empty():
 		battler_reload(battlers[1])
@@ -482,21 +503,23 @@ def check_status():
 	for i in battlers:
 		if not i.status:
 			continue
-			
-		for j in i.status:
+		
+		print_bar("STATUS EFFECT")
+		for id, j in enumerate(i.status):
 			if j.is_dead():
 				i.remove_hit_bouns()
 				i.remove_evade_bouns()
 				i.is_movable = True
-				i.remove_status(j)
+				i.remove_status(id)
 			else:
 				i.hp_change(j.hp_change)
 				i.add_hit_bouns(j.hit_bouns)
 				i.add_evade_bouns(j.evade_bouns)
 				i.is_movable = j.is_movable
 				
-				print_bar("STATUS EFFECT")
 				print("%s MP + %s" % (i.name, j.hp_change))
+				
+			j.reduce_keep_turn()
 			
 		
 def print_battlersStatus():
@@ -543,24 +566,31 @@ def print_currentCover(battler):
 	print(" NO COVER")
 	
 def print_skills(battler):
-	print("{:<10} {:<5}".format("NAME", "COST"))
+	print("{:<10} {:<8}".format("NAME", "MP COST"))
 	for i in battler.skills:
-		print("{:<10} {:<5}".format(i.name, i.hp_cost))
+		print("{:<10} {:<8}".format(i.name, i.hp_cost))
 		print("    " + i.desc)
 
 def print_commands():
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[1]-[4]", "Switch weapon", "", "", ""))
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[W]:FIRE", "", "[R]:RELOAD", "[I]:INFO"))
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[S]:TAKE COVER", "", "", ""))
+	if not battlers[0].skills:
+		return
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[Z]:" + skills[0].name,
 												"[X]:" + skills[1].name, 
 												"[C]:" + skills[2].name, "", ""))
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format(skills[0].hp_cost,
+												skills[1].hp_cost, 
+												skills[2].hp_cost, "", ""))
 
 def battle_scene():
 	turn = 0;
 	
 	while True:
-		print_bar("STATUS")
+		print_without_enter(COLORS.BOLD)
+		print_hugebar("STATUS")
+		print_without_enter(COLORS.ENDC)
 		print("[Second: %s]" % turn)
 		print_battlersStatus()
 		print_currentCover(battlers[0])
@@ -587,10 +617,11 @@ def battle_scene():
 		print_bar("ENEMY ACTION")
 		enemy_action()
 		
+		check_status()
+		
 		check_win()
 		check_cover(battlers[0])
 		
-		check_status()
 		turn += 1
 			
 		
