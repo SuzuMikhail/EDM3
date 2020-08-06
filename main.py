@@ -21,6 +21,8 @@ class Battler:
 		self.hit_percent = 90
 		self.evade_percent = 40
 		self.cover_object = None
+		self.status = None
+		self.skills = []
 		
 	def is_dead(self):
 		if self.hp <= 0:
@@ -50,6 +52,12 @@ class Battler:
 	def remove_weapon(self, id):
 		del self.weapons[id]
 		
+	def add_skill(self, skill):
+		self.skills.append(skill)
+	
+	def remove_skill(self, id):
+		del self.skills[id]
+		
 	def is_covered(self):
 		if self.cover_object:
 			return True
@@ -66,6 +74,7 @@ class Weapon:
 	
 	def __init__(self, name, desc, dmg, rps, ammo, critical_percent=0, hit_percent_bouns=0):
 		self.name = name
+		self.desc = desc
 		self.dmg = dmg
 		self.rps = rps
 		self.ammo = ammo
@@ -189,6 +198,9 @@ skills = []
 skills.append(Skill("FIRE", "Burn enemy", 80, status[0]))
 skills.append(Skill("ICE SHIELD", "Add shield to your self", 150))
 skills.append(Skill("BOLT", "Shock enemy", 100, status[1]))
+
+for i in skills:
+	battlers[0].add_skill(i)
 
 def print_hugebar(s=""):
 	print(s.center(80, "="))
@@ -337,6 +349,13 @@ def battler_switch_weapon(battler, id):
 	battler.hold_weapon(id - 1)
 	return True
 	
+def print_playerinfo():
+	print("{:<10}".format(battlers[0].name))
+	print_bar("WEAPONS")
+	print_currentweapon(battlers[0], True)
+	print_bar("SKILLS")
+	print_skills(battlers[0])
+	
 def command_perform(cmd_char):
 	if cmd_char is "w":
 		wp = battlers[0].get_current_weapon()
@@ -355,6 +374,9 @@ def command_perform(cmd_char):
 	elif cmd_char is "r":
 		battler_reload(battlers[0])
 		return True
+	elif cmd_char is "i":
+		print_playerinfo()
+		return False
 	elif cmd_char is "1":
 		if battler_switch_weapon(battlers[0], 1):
 			return True
@@ -411,7 +433,7 @@ def check_cover(battler):
 		print("[COVER IS BROKEN]")
 		battler.leave_cover()
 		
-def print_batttlersStatus():
+def print_battlersStatus():
 	print("{:<15} {:<6}   {:<6}".format("NAME", "MANA", "MAXMN"))
 	for i in range(2):
 		name = battlers[i].name
@@ -422,17 +444,25 @@ def print_batttlersStatus():
 def print_final_percent():
 	print("HIT%: {:<4} EVADE%: {:<4}".format(get_attacker_final_hit_percent(battlers[0]), get_target_final_evade_percent(battlers[0])))
 	
-def print_currentweapon(battler):
-	print("{:<3} {:<15} {:<5} {:<8}".format("ID", "NAME", "AMMO", "MAX"))
+def print_currentweapon(battler, detail=False):
+	if detail:
+		print("{:<3} {:<15} {:<4} {:<4} {:<5} {:<8}".format("ID", "NAME", "DMG", "DPS", "AMMO", "MAX"))
+	else:
+		print("{:<3} {:<15} {:<5} {:<8}".format("ID", "NAME", "AMMO", "MAX"))
 	for j, i in enumerate(battler.weapons):
 		name = i.name
-		#dmg = i.dmg
-		#rps = i.rps
+		dmg = i.dmg
+		rps = i.rps
 		ammo = i.ammo
 		max_ammo = i.max_ammo
+		desc = i.desc
 		if j is battler.current_weapon_id:
 			print(COLORS.GREEN, end="")
-		print("[{:<2}] {:<15} {:<5} {:<8}".format(j + 1, name, ammo, max_ammo))
+		if detail:
+			print("[{:<1}] {:<15} {:<4} {:<4} {:<5} {:<8}".format((j + 1), name, dmg, rps, ammo, max_ammo))
+			print("    " + i.desc)
+		else:
+			print("[{:<1}] {:<15} {:<5} {:<8}".format((j + 1), name, ammo, max_ammo))
 		print(COLORS.ENDC, end="")
 		
 def print_currentCover(battler):
@@ -443,13 +473,19 @@ def print_currentCover(battler):
 		return
 	print(" NO COVER")
 	
+def print_skills(battler):
+	print("{:<10} {:<5}".format("NAME", "COST"))
+	for i in battler.skills:
+		print("{:<10} {:<5}".format(i.name, i.hp_cost))
+		print("    " + i.desc)
+
 def print_commands():
-	print("{:<16} {:<16} {:<16} {:<16}".format("[1]-[4]", "Switch weapon", "", ""))
-	print("{:<16} {:<16} {:<16} {:<16}".format("", "[W]:FIRE", "", "[R]:RELOAD"))
-	print("{:<16} {:<16} {:<16} {:<16}".format("", "[S]:TAKE COVER", "", ""))
-	print("{:<16} {:<16} {:<16} {:<16}".format("[Z]:" + skills[0].name,
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[1]-[4]", "Switch weapon", "", "", ""))
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[W]:FIRE", "", "[R]:RELOAD", "[I]:INFO"))
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[S]:TAKE COVER", "", "", ""))
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[Z]:" + skills[0].name,
 												"[X]:" + skills[1].name, 
-												"[C]:" + skills[2].name, ""))
+												"[C]:" + skills[2].name, "", ""))
 
 def battle_scene():
 	turn = 0;
@@ -457,7 +493,7 @@ def battle_scene():
 	while True:
 		print_bar("STATUS")
 		print("[Second: %s]" % turn)
-		print_batttlersStatus()
+		print_battlersStatus()
 		print_currentCover(battlers[0])
 		print_bar("APPROXIMATE HIT/EVADE %")
 		print_final_percent()
