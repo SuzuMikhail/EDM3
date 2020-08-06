@@ -11,18 +11,21 @@ class COLORS:
 	CYAN = '\033[96m'
 
 class Battler:
-	def __init__(self, name, maxhp):
+	def __init__(self, name, maxhp, orig_hit_percent=90, orig_evade_percent=40):
 		self.name = name
 		self.hp = maxhp;
 		self.maxhp = maxhp
+		self.orig_hit_percent = orig_hit_percent
+		self.orig_evade_percent = orig_evade_percent
+		self.hit_percent = orig_hit_percent
+		self.evade_percent = orig_evade_percent
 		self.weapons = []
 		self.current_weapon_id = 0
 		self.cover = 0
-		self.hit_percent = 90
-		self.evade_percent = 40
 		self.cover_object = None
-		self.status = None
+		self.status = []
 		self.skills = []
+		self.is_movable = True
 		
 	def is_dead(self):
 		if self.hp <= 0:
@@ -30,6 +33,9 @@ class Battler:
 		return False
 		
 	def hp_change(self, hp):
+		current_hp = self.hp + hp
+		if current_hp > self.maxhp:
+			return
 		self.hp += hp
 		
 	def get_current_weapon(self):
@@ -68,6 +74,26 @@ class Battler:
 		
 	def leave_cover(self):
 		self.cover_object = None
+		
+	def add_status(self, status):
+		self.status.append(status)
+	
+	def remove_status(self, id):
+		del self.status[id]
+		
+	def add_hit_bouns(self, value):
+		self.hit_percent += value
+		
+	def remove_hit_bouns(self):
+		self.hit_percent = self.orig_hit_percent
+		
+	def add_evade_bouns(self, value):
+		self.evade_percent += value
+		
+	def remove_evade_bouns(self):
+		self.evade_percent = self.orig_evade_percent
+		
+		
 		
 class Weapon:
 	CRITICAL_BONUS_PERCENT = 200
@@ -142,13 +168,21 @@ class Cover:
 		return True
 		
 class Status:
-	def __init__(self, name, keep_turn=0, hit_bouns=0, evade_bouns=0, can_move=True, hp_change=0):
+	def __init__(self, name, keep_turn=0, hit_bouns=0, evade_bouns=0, is_movable=True, hp_change=0):
 		self.name = name
 		self.keep_turn = keep_turn
 		self.hit_bouns = hit_bouns
 		self.evade_bouns = evade_bouns
-		self.can_move = can_move
+		self.is_movable = is_movable
 		self.hp_change = hp_change
+		
+	def reduce_keep_turn(self):
+		self.keep_turn -= 1
+		
+	def is_dead(self):
+		if self.keep_turn != 0:
+			return False
+		return True
 		
 class Skill:
 	def __init__(self, name, desc="", hp_cost=0, status=None):
@@ -168,39 +202,49 @@ class Shield:
 		self.evade_bouns = 0
 	
 weapons = []
-weapons.append(Weapon("5.56x45mm LMG", "A light machinegun made by Belgium", 8, 15, 100, 4))
-weapons.append(Weapon("7.62x39mm LMG", "A light machinegun made by USSR", 18, 10, 100, 12, -10))
-weapons.append(Weapon("12.7x99mm HMG", "A heavy machinegun made by USA", 30, 10, 100, 30, -30))
-weapons.append(Weapon("12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 12, 100, 35, -35))
-		
 battlers = []
-battlers.append(Battler("You", 3000))
-battlers.append(Battler("Magical girl", 9000))
-battlers[0].equip_weapon(weapons[0])
-battlers[0].equip_weapon(weapons[2])
-battlers[1].equip_weapon(weapons[1])
-battlers[1].equip_weapon(weapons[3])
-#battlers[1].hold_weapon(0)
-
 covers = []
-covers.append(Cover("Forest", 10000, hit_bouns=-20, evade_bouns=40))
-covers.append(Cover("Street", 20000, hit_bouns=-10, evade_bouns=30))
-covers.append(Cover("Building", 10000, hit_bouns=0, evade_bouns=20))
-covers.append(Cover("Sun", 99999, hit_bouns=40, evade_bouns=-20, nodamage=True))
-
 status = []
-status.append(Status("BURN", 10, 20, 20, hp_change=-200))
-status.append(Status("SHOCK", 10, 50, 50, False, -40))
-status.append(Status("HEALING", 5, 0, 0, hp_change=100))
-status.append(Status("HEALING+", 600, 0, 0, hp_change=60))
-
 skills = []
-skills.append(Skill("FIRE", "Burn enemy", 80, status[0]))
-skills.append(Skill("ICE SHIELD", "Add shield to your self", 150))
-skills.append(Skill("BOLT", "Shock enemy", 100, status[1]))
 
-for i in skills:
-	battlers[0].add_skill(i)
+def init():
+	weapons.append(Weapon("5.56x45mm LMG", "A light machinegun made by Belgium", 8, 15, 100, 4))
+	weapons.append(Weapon("7.62x39mm LMG", "A light machinegun made by USSR", 18, 10, 100, 12, -10))
+	weapons.append(Weapon("12.7x99mm HMG", "A heavy machinegun made by USA", 30, 10, 100, 30, -30))
+	weapons.append(Weapon("12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 12, 100, 35, -35))
+			
+
+	battlers.append(Battler("You", 3000))
+	battlers.append(Battler("Magical girl", 9000))
+	battlers[0].equip_weapon(weapons[0])
+	battlers[0].equip_weapon(weapons[2])
+	battlers[1].equip_weapon(weapons[1])
+	battlers[1].equip_weapon(weapons[3])
+	#battlers[1].hold_weapon(0)
+
+
+	covers.append(Cover("Forest", 10000, hit_bouns=-50, evade_bouns=70))
+	covers.append(Cover("Street", 20000, hit_bouns=-40, evade_bouns=50))
+	covers.append(Cover("Building", 10000, hit_bouns=0, evade_bouns=20))
+	covers.append(Cover("Sun", 99999, hit_bouns=40, evade_bouns=-20, nodamage=True))
+
+
+	status.append(Status("BURN", 10, -20, -20, hp_change=-200))
+	status.append(Status("SHOCK", 10, -50, -50, False, -40))
+	status.append(Status("HEALING", 5, 0, 0, hp_change=100))
+	status.append(Status("HEALING+", 600, 0, 0, hp_change=60))
+
+	skills.append(Skill("FIRE", "Burn enemy", 80, status[0]))
+	skills.append(Skill("ICE SHIELD", "Add shield to your self", 150))
+	skills.append(Skill("BOLT", "Shock enemy", 100, status[1]))
+	
+	for i in skills:
+		battlers[0].add_skill(i)
+		
+	battlers[1].add_status(status[3])
+		
+
+
 
 def print_hugebar(s=""):
 	print(s.center(80, "="))
@@ -286,7 +330,7 @@ def attack_in_turn(attacker, target):
 			
 			dmg = orig_dmg #Clear critical bonus
 			
-			if (i + 1) % 5 == 0:
+			if (i + 1) % 10 == 0:
 				print("", end="\n")
 	
 	
@@ -350,6 +394,7 @@ def battler_switch_weapon(battler, id):
 	return True
 	
 def print_playerinfo():
+	print_hugebar("INFO")
 	print("{:<10}".format(battlers[0].name))
 	print_bar("WEAPONS")
 	print_currentweapon(battlers[0], True)
@@ -433,13 +478,37 @@ def check_cover(battler):
 		print("[COVER IS BROKEN]")
 		battler.leave_cover()
 		
+def check_status():
+	for i in battlers:
+		if not i.status:
+			continue
+			
+		for j in i.status:
+			if j.is_dead():
+				i.remove_hit_bouns()
+				i.remove_evade_bouns()
+				i.is_movable = True
+				i.remove_status(j)
+			else:
+				i.hp_change(j.hp_change)
+				i.add_hit_bouns(j.hit_bouns)
+				i.add_evade_bouns(j.evade_bouns)
+				i.is_movable = j.is_movable
+				
+				print_bar("STATUS EFFECT")
+				print("%s MP + %s" % (i.name, j.hp_change))
+			
+		
 def print_battlersStatus():
-	print("{:<15} {:<6}   {:<6}".format("NAME", "MANA", "MAXMN"))
+	print("{:<15} {:<6}   {:<6} {:<6}".format("NAME", "MANA", "MAXMN", "STATUS"))
 	for i in range(2):
 		name = battlers[i].name
 		hp = battlers[i].hp
 		maxhp = battlers[i].maxhp
-		print("{:<15} {:<6} / {:<6}".format(name, hp, maxhp))
+		print("{:<15} {:<6} / {:<6}".format(name, hp, maxhp), end="")
+		for i in battlers[i].status:
+			print(i.name, end=" ")
+		print("")
 		
 def print_final_percent():
 	print("HIT%: {:<4} EVADE%: {:<4}".format(get_attacker_final_hit_percent(battlers[0]), get_target_final_evade_percent(battlers[0])))
@@ -521,11 +590,12 @@ def battle_scene():
 		check_win()
 		check_cover(battlers[0])
 		
-			
+		check_status()
 		turn += 1
 			
 		
 def main():
+	init()
 	battle_scene()
 	return
 	
