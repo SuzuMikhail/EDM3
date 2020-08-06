@@ -1,6 +1,16 @@
 import random
 import sys
 
+class COLORS:
+	ENDC = '\033[0m'
+	RED = '\033[91m'
+	
+	GREEN = '\033[92m'
+	YELLOW = '\033[93m'
+	BLUE = '\033[94m'
+	MAGENTA = '\033[95m'
+	CYAN = '\033[96m'
+
 class Battler:
 	def __init__(self, name, maxhp):
 		self.name = name
@@ -27,8 +37,19 @@ class Battler:
 			return wp;
 		return None
 		
-	def equip_weapon(self, id):
-		self.current_weapon = id
+	def hold_weapon(self, id):
+		self.current_weapon_id = id
+		
+	def equip_weapon(self, weapon):
+		self.weapons.append(weapon)
+		
+	def is_equip_weapon(self, id):
+		if id > (len(self.weapons) - 1):
+			return False
+		return True
+	
+	def remove_weapon(self, id):
+		del self.weapons[id]
 		
 	def is_covered(self):
 		if self.cover_object:
@@ -114,17 +135,19 @@ class Cover:
 		
 		
 weapons = []
-weapons.append(Weapon("5.56x45mm LMG", 8, 15, 300, 4))
-weapons.append(Weapon("7.62x39mm LMG", 18, 10, 300, 12, -3))
-weapons.append(Weapon("12.7x99mm HMG", 60, 10, 900, 30, -15))
-weapons.append(Weapon("12.7x108mm HMG", 80, 12, 1000, 35, -20))
+weapons.append(Weapon("5.56x45mm LMG", 8, 15, 100, 4))
+weapons.append(Weapon("7.62x39mm LMG", 18, 10, 100, 12, -10))
+weapons.append(Weapon("12.7x99mm HMG", 30, 10, 100, 30, -30))
+weapons.append(Weapon("12.7x108mm HMG", 40, 12, 100, 35, -35))
 		
 battlers = []
 battlers.append(Battler("You", 3000))
 battlers.append(Battler("Magical girl", 9000))
-battlers[0].weapons.append(weapons[0])
-battlers[1].weapons.append(weapons[1])
-battlers[1].equip_weapon(1)
+battlers[0].equip_weapon(weapons[0])
+battlers[0].equip_weapon(weapons[2])
+battlers[1].equip_weapon(weapons[1])
+battlers[1].equip_weapon(weapons[3])
+#battlers[1].hold_weapon(0)
 
 covers = []
 covers.append(Cover("Forest", 10000, hit_bouns=-40, evade_bouns=40))
@@ -138,6 +161,8 @@ def print_hugebar(s=""):
 def print_bar(s=""):
 	print(s.center(80, "-"))
 
+def print_without_enter(s=""):
+	print(s, end="")
 
 def attack(target, hp):
 	target.hp_change(-hp)
@@ -187,21 +212,29 @@ def attack_in_turn(attacker, target):
 					if get_rate() >= target_evade_percent:
 						if get_rate() <= critical_percent:
 							dmg *= int(Weapon.CRITICAL_BONUS_PERCENT / 100)
-							print("!CRIT! ", end="")
+							print_without_enter(COLORS.YELLOW)
 							
 						print("{:>4} ".format(dmg), end="")
+						
 						if attack(target, dmg):
 							total_hit += 1
 							total_damage += dmg
 					else:
-						if target_is_covered: #If evade, cover takes damage
-							target_cover.hp_change(-dmg)
+						print_without_enter(COLORS.CYAN)
 						print("EVAD ", end="")
 				else:
+					print_without_enter(COLORS.BLUE)
 					print("MISS ", end="")
+					
+					
+				if target_is_covered: #If evade or missed, cover takes damage
+					target_cover.hp_change(-dmg)
 			else:
+				print_without_enter(COLORS.BOLD)
 				print(">AMMO OUT<")
 				break
+				
+			print_without_enter(COLORS.ENDC)
 			
 			dmg = orig_dmg #Clear critical bonus
 			
@@ -218,7 +251,7 @@ def show_damage(hit, dmg):
 	
 def show_covers():
 	print_hugebar("COVER")
-	print("{:<6} {:<10} {:<6}   {:<6} {:<9} {:<9}".format("INDEX", "NAME", "HP", "MAXHP", "HITMAX%", "EVADEMAX%"))
+	print("{:<6} {:<10} {:<6}	{:<6} {:<9} {:<9}".format("INDEX", "NAME", "HP", "MAXHP", "HITMAX%", "EVADEMAX%"))
 	for i, j in enumerate(covers):
 		name = j.name
 		hp = j.hp
@@ -259,6 +292,15 @@ def battler_reload(battler):
 	wp = battler.get_current_weapon()
 	wp.reload()
 	
+def battler_switch_weapon(battler, id):
+	wp = battler.get_current_weapon()
+	if not battler.is_equip_weapon(id - 1):
+		print("[NO WEAPON IN SLOT]")
+		return False
+	print("[SWITCH WEAPON TO %s]" % wp.name)
+	battler.hold_weapon(id - 1)
+	return True
+	
 def command_perform(cmd_char):
 	if cmd_char is "w":
 		wp = battlers[0].get_current_weapon()
@@ -277,6 +319,22 @@ def command_perform(cmd_char):
 	elif cmd_char is "r":
 		battler_reload(battlers[0])
 		return True
+	elif cmd_char is "1":
+		if battler_switch_weapon(battlers[0], 1):
+			return True
+		return False
+	elif cmd_char is "2":
+		if battler_switch_weapon(battlers[0], 2):
+			return True
+		return False
+	elif cmd_char is "3":
+		if battler_switch_weapon(battlers[0], 3):
+			return True
+		return False
+	elif cmd_char is "4":
+		if battler_switch_weapon(battlers[0], 4):
+			return True
+		return False
 	else:
 		return False
 		
@@ -318,7 +376,7 @@ def check_cover(battler):
 		battler.leave_cover()
 		
 def print_batttlersStatus():
-	print("{:<15} {:<6}   {:<6}".format("NAME", "MANA", "MAXMN"))
+	print("{:<15} {:<6}	  {:<6}".format("NAME", "MANA", "MAXMN"))
 	for i in range(2):
 		name = battlers[i].name
 		hp = battlers[i].hp
@@ -336,7 +394,10 @@ def print_currentweapon(battler):
 		#rps = i.rps
 		ammo = i.ammo
 		max_ammo = i.max_ammo
+		if j is battler.current_weapon_id:
+			print(COLORS.GREEN, end="")
 		print("[{:<2}] {:<15} {:<5} {:<8}".format(j + 1, name, ammo, max_ammo))
+		print(COLORS.ENDC, end="")
 		
 def print_currentCover(battler):
 	print("Current cover: ", end="")
@@ -347,10 +408,10 @@ def print_currentCover(battler):
 	print(" NO COVER")
 	
 def print_commands():
+	print("{:<12} {:<12} {:<12} {:<12}".format("[1]-[4]", "Switch weapon", "", ""))
 	print("{:<12} {:<12} {:<12} {:<12}".format("", "[W]:FIRE", "", "[R]:RELOAD"))
 	print("{:<12} {:<12} {:<12} {:<12}".format("", "[S]:TAKE COVER", "", ""))
 	
-		
 
 def battle_scene():
 	turn = 0;
