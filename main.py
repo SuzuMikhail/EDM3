@@ -135,23 +135,28 @@ class Cover:
 		
 	def get_hit_bouns(self):
 		hit_bouns = self.hit_bouns
-		if self.hit_bouns <= 0:
+		if self.hit_bouns == 0:
+			return 0
+
+		if self.hit_bouns < 0:
 			hit_bouns = -self.hit_bouns
 			
 		i = random.randrange(0, hit_bouns)
 		
-		if self.hit_bouns <= 0:
+		if self.hit_bouns < 0:
 			return -i
 		return i
 	
 	def get_evade_bouns(self):
 		evade_bouns = self.evade_bouns
-		if self.evade_bouns <= 0:
+		if self.evade_bouns == 0:
+			return 0
+		if self.evade_bouns < 0:
 			evade_bouns = -self.evade_bouns
 			
 		i = random.randrange(0, evade_bouns)
 		
-		if self.evade_bouns <= 0:
+		if self.evade_bouns < 0:
 			return -i
 		return i
 		
@@ -228,10 +233,10 @@ status = []
 skills = []
 
 def init():
-	weapons.append(Weapon("5.56x45mm LMG", "A light machinegun made by Belgium", 8, 15, 100, 4))
-	weapons.append(Weapon("7.62x39mm LMG", "A light machinegun made by USSR", 18, 10, 100, 12, -10))
-	weapons.append(Weapon("12.7x99mm HMG", "A heavy machinegun made by USA", 30, 10, 100, 30, -30))
-	weapons.append(Weapon("12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 12, 100, 35, -35))
+	weapons.append(Weapon("5.56x45mm LMG", "A light machinegun made by Belgium", 8, 15, 300, 4))
+	weapons.append(Weapon("7.62x39mm LMG", "A light machinegun made by USSR", 18, 10, 300, 12, -5))
+	weapons.append(Weapon("12.7x99mm HMG", "A heavy machinegun made by USA", 30, 5, 100, 30, -30))
+	weapons.append(Weapon("12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 7, 100, 35, -35))
 			
 
 	battlers.append(Battler("You", 3000))
@@ -254,11 +259,12 @@ def init():
 	status.append(Status("HEALING", 5, 0, 0, hp_change=100))
 	status.append(Status("HEALING+", 600, 0, 0, hp_change=80))
 
-	skills.append(Skill("FIRE", "Burn enemy", 80, status[0], 15))
-	skills.append(Skill("ICE SHIELD", "Add shield to your self", 150, 15))
-	skills.append(Skill("BOLT", "Shock enemy", 100, status[1], 15))
+	skills.append(Skill("FIRE", "Burn enemy and keep them burning", 80, status[0], 18))
+	skills.append(Skill("ICE POWER", "Heal yourself", 0, cooldown_turn=15))
+	skills.append(Skill("BOLT", "Shock enemy and make them can not move", 100, status[1], 1))
 	skills.append(Skill("HEAL", "Heal yourself", 0, cooldown_turn=30))
-	skills[3].hp_cost = -(battlers[0].hp / 2)
+	skills[1].hp_cost = -int(battlers[0].hp / 5)
+	skills[3].hp_cost = -int(battlers[0].hp / 3)
 	
 	for i in skills:
 		battlers[0].add_skill(i)
@@ -352,8 +358,7 @@ def attack_in_turn(attacker, target):
 			
 			if (i + 1) % 10 == 0:
 				print("", end="\n")
-		
-	print("")
+			
 	return total_hit, total_damage
 
 def show_damage(hit, dmg):
@@ -632,8 +637,8 @@ def battle_scene():
 		print("[Second: %s]" % turn)
 		print_battlersStatus()
 		print_currentCover(battlers[0])
-		print_bar("APPROXIMATE HIT/EVADE %")
-		print_final_percent()
+		#print_bar("APPROXIMATE HIT/EVADE %")
+		#print_final_percent()
 		print_hugebar()
 		
 		print_currentweapon(battlers[0])
@@ -649,6 +654,7 @@ def battle_scene():
 				if command_perform(cmd_char):
 					break
 		
+		
 		check_win()
 		check_cover(battlers[0])
 		
@@ -657,11 +663,12 @@ def battle_scene():
 		
 		check_status()
 		update_skill_cooldown()
-		
+
 		check_win()
 		check_cover(battlers[0])
 		
 		turn += 1
+		print("\n\n\n")
 			
 		
 def main():
