@@ -1,5 +1,6 @@
 import time
 import sys
+from gamedb import LEVEL_UP_MSG
 import battle_system
 
 
@@ -7,8 +8,8 @@ def story():
 	story_level = 1
 	while 1:
 		if enter_episode(story_level):
-			battle_system.main()
-		story_level += 1
+			if battle_system.main():
+				story_level += 1
 		
 
 def enter_episode(story_id=0):
@@ -27,7 +28,6 @@ def enter_episode(story_id=0):
 	storyfile_suffix = ".txt"
 	
 	for i in open(story_path + story[story_id] + storyfile_suffix):
-		#print(i, end="")
 		sys.stdout.write(i)
 		sys.stdout.flush()
 		#time.sleep(.6)
@@ -38,6 +38,9 @@ def enter_episode(story_id=0):
 			if enemy_id[story_id] == 0:
 				return False
 			return True
+	
+def print_victory(story_id=0):
+	print(LEVEL_UP_MSG)
 	
 def print_main_menu():
 	print("{:<15} {:<15} {:<15}".format("", "[E]:Next", "[I]:Inventory"))

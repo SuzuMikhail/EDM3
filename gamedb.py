@@ -1,4 +1,12 @@
 import random
+#import gettext
+
+import os
+"""
+localedir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
+translate = gettext.translation('handroll', localedir, fallback=True)
+_ = translate.gettext
+"""
 
 class COLORS:
 	ENDC = '\033[0m'
@@ -252,3 +260,12 @@ SKILLS = [
 	["BOLT",       "Shock enemy and make them can not move", 100,  1,  23],
 	["HEAL",      "Heal yourself",                           0, None, 30]
 ]
+
+STATUS = [
+	["BURN",      5,  -5, -5,   True, -150],
+	["SHOCK",     5, -25, -25, False, -20],
+    ["HEALING",   5,   0, 0,    True, 100],
+    ["HEALING+", 150,  0, 0,    True, 40]
+]
+
+LEVEL_UP_MSG = "LEVEL UP!"
