@@ -1,13 +1,13 @@
 import time
 import sys
-import main
+import battle_system
 
 
 def story():
-	story_level = 0
+	story_level = 1
 	while 1:
 		if enter_episode(story_level):
-			main.main()
+			battle_system.main()
 		story_level += 1
 		
 
@@ -30,7 +30,7 @@ def enter_episode(story_id=0):
 		#print(i, end="")
 		sys.stdout.write(i)
 		sys.stdout.flush()
-		time.sleep(.8)
+		#time.sleep(.6)
 	print("")
 
 	while 1:
