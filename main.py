@@ -2,6 +2,8 @@ import random
 import sys
 import time
 
+import story_panel
+
 class COLORS:
 	ENDC = '\033[0m'
 	RED = '\033[91m'
@@ -240,7 +242,7 @@ def init():
 			
 
 	battlers.append(Battler("You", 3000))
-	battlers.append(Battler("Magical girl", 9000, orig_evade_percent=25))
+	battlers.append(Battler("New world godness", 9000, orig_evade_percent=25))
 	battlers[0].equip_weapon(weapons[0])
 	battlers[0].equip_weapon(weapons[2])
 	battlers[1].equip_weapon(weapons[1])
@@ -555,12 +557,12 @@ def update_skill_cooldown():
 			i.reduce_keep_turn()
 		
 def print_battlersStatus():
-	print("{:<15} {:<6}   {:<6} {:<6}".format("NAME", "MANA", "MAXMN", "STATUS"))
+	print("{:<20} {:<6}   {:<6} {:<6}".format("NAME", "MANA", "MAXMN", "STATUS"))
 	for i in range(2):
 		name = battlers[i].name
 		hp = battlers[i].hp
 		maxhp = battlers[i].maxhp
-		print("{:<15} {:<6} / {:<6}".format(name, hp, maxhp), end="")
+		print("{:<20} {:<6} / {:<6}".format(name, hp, maxhp), end="")
 		for i in battlers[i].status:
 			print(i.name, end=" ")
 		print("")
@@ -672,8 +674,7 @@ def battle_scene():
 			
 		
 def main():
+	print("BATTLE MAIN")
 	init()
 	battle_scene()
 	return
-	
-main()
