@@ -56,6 +56,8 @@ def init(story_id):
 	for i in skills:
 		battlers[0].add_skill(i)
 		
+	ready_for_next_fire = False
+	player_lastturn_is_covered = False
 	
 def reset():
 	weapons.clear()
@@ -174,35 +176,35 @@ def show_covers():
 	print_hugebar()
 	
 def choose_covers():
-	print("[W]:Leave cover, [`][0]:Exit")
+	print(_("[W]:Leave cover, [`][0]:Exit"))
 	id = input("COVER COMMAND:>")
 	if id is "`" or id is "0":
 		return False
 	if id is "w":
 		if battlers[0].is_covered():
-			print("[LEAVE COVER]")
+			print(_("[LEAVE COVER]"))
 			battlers[0].leave_cover()
 			return True
 		else:
-			print("[NOT COVERED]")
+			print(_("[NOT COVERED]"))
 			return False
 		
 	id = int(id)
 	id -= 1
 	if covers[id].is_dead():
 		print_without_enter(COLORS.RED)
-		print("[COVER IS NOT USABLE]")
+		print(_("[COVER IS NOT USABLE]"))
 		print_without_enter(COLORS.ENDC)
 		return False
 	
 	c = covers[id]
 	battlers[0].cover_object = c
-	print("Cover changed to: %s " % c.name)
+	print(_("Cover changed to: %s ") % c.name)
 	return True
 	
 def battler_reload(battler):
 	print_without_enter(COLORS.GREEN)
-	print("[RELOADING]")
+	print(_("[RELOADING]"))
 	print_without_enter(COLORS.ENDC)
 	wp = battler.get_current_weapon()
 	wp.reload()
@@ -213,7 +215,7 @@ def battler_switch_weapon(battler, id):
 		print("[NO WEAPON IN SLOT]")
 		return False
 	print_without_enter(COLORS.GREEN)
-	print("[SWITCH WEAPON TO %s]" % weapons[id].name)
+	print("[SWITCH WEAPON TO %s]" % battler.weapons[id].name)
 	print_without_enter(COLORS.ENDC)
 	battler.hold_weapon(id)
 	return True
@@ -294,12 +296,10 @@ def command_perform(cmd_char):
 		
 	return True
 	
+
 def enemy_action(story_id):
-	ready_for_next_fire = False
-	player_lastturn_is_covered = False
-	
 	if battlers[1].is_movable == False:
-		print("[SHOCKED]")
+		print(_("[SHOCKED]"))
 		return
 	wp = battlers[1].get_current_weapon()
 	
@@ -320,32 +320,43 @@ def enemy_action(story_id):
 				battler_switch_weapon(battlers[1], 0)
 		
 	elif story_id == 2:
-		if not ready_for_next_fire:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+			
+		if not enemy_action.ready_for_next_fire:
+			if wp.is_magazine_empty():
+				battler_reload(battlers[1])
+				return
+				
 			if battlers[0].is_covered():
 				battler_switch_weapon(battlers[1], 1)
-				ready_for_next_fire = True
-				player_lastturn_is_covered = True
+				enemy_action.ready_for_next_fire = True
+				enemy_action.hold_rpg = True
 				return
 			else:
-				player_lastturn_is_covered = False
-				battler_reload(battlers[1])
-				battler_switch_weapon(battlers[1], 0)
-				return
-		
-		if ready_for_next_fire:
-			ready_for_next_fire = False
+				if enemy_action.hold_rpg:
+					battler_switch_weapon(battlers[1], 0)
+					enemy_action.hold_rpg = False
+					return
+		else:
+			enemy_action.ready_for_next_fire = False
 	
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
 	
+enemy_action.ready_for_next_fire = False
+enemy_action.hold_rpg = False
+	
+	
 def is_win(battlers):
 	if battlers[0].is_dead():
 		print_hugebar()
-		print("You are dead")
+		print(_("You are dead"))
 		return -1
 	elif battlers[1].is_dead():
 		print_hugebar()
-		print("Enemy down")
+		print(_("Enemy down"))
 		return 1
 	else:
 		return 0
@@ -353,11 +364,11 @@ def is_win(battlers):
 def check_win():
 	party_state = is_win(battlers)
 	if party_state < 0:
-		print("You lose")
+		print(_("You lose"))
 		print_hugebar()
 		return False
 	elif party_state > 0:
-		print("You win")
+		print(_("You win"))
 		print_hugebar()
 		return True
 		
@@ -384,13 +395,14 @@ def check_status():
 				i.is_movable = True
 				i.remove_status(id)
 			else:
-				i.hp_change(j.hp_change)
+				hp_change = int(i.hp * (j.hp_change_percent / 100))
+				i.hp_change(hp_change)
 				i.add_hit_bouns(j.hit_bouns)
 				i.add_evade_bouns(j.evade_bouns)
 				if j.name != status[1].name:
 					i.is_movable = j.is_movable
 				
-				print("%s MP + %s" % (i.name, j.hp_change))
+				print("%s MP + %s" % (i.name, hp_change))
 				
 			j.reduce_keep_turn()
 			common.wait_and_flush()

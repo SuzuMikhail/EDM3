@@ -5,8 +5,6 @@ import common
 
 import os
 
-LANG_ZH = False
-
 class COLORS:
 	ENDC = '\033[0m'
 	RED = '\033[91m'
@@ -178,14 +176,14 @@ class Cover:
 		return True
 		
 class Status:
-	def __init__(self, name, keep_turn=0, hit_bouns=0, evade_bouns=0, is_movable=True, hp_change=0):
+	def __init__(self, name, keep_turn=0, hit_bouns=0, evade_bouns=0, is_movable=True, hp_change_percent=0):
 		self.name = name
 		self.hp = keep_turn
 		self.keep_turn = keep_turn
 		self.hit_bouns = hit_bouns
 		self.evade_bouns = evade_bouns
 		self.is_movable = is_movable
-		self.hp_change = hp_change
+		self.hp_change_percent = hp_change_percent
 		
 	def reduce_keep_turn(self):
 		self.hp -= 1
@@ -225,8 +223,7 @@ class Shield:
 		self.hp = hp
 		self.hit_bouns = 0
 		self.evade_bouns = 0
-		
-_ = common.translate
+
 
 STR_ZH = {
 	"_en" : "_zh",
@@ -239,6 +236,7 @@ STR_ZH = {
 	
 	"You": "你",
 	"New world godness": "新世界女神",
+	"Happy virus maker": "乐流感大师",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -278,6 +276,12 @@ STR_ZH = {
 	"TAKE COVER": "寻求掩体",
 	"RELOAD": "装填",
 	"[COVER IS BROKEN]": "[掩体损坏]",
+	"[RELOADING]": "正在装弹",
+	"[W]:Leave cover, [`][0]:Exit": "[W]:离开掩体, [`][0]:返回",
+	"[LEAVE COVER]": "[离开掩体]",
+	"[NOT COVERED]": "无掩体",
+	"[COVER IS NOT USABLE]": "掩体不可用",
+	"Cover changed to: %s ": "切换至掩体: %s",
 	
 	"FIRE CURSE": "烈火诅咒",
 	"ICE POWER": "寒冰之力",
@@ -287,24 +291,29 @@ STR_ZH = {
 	"BURN": "燃烧",
 	"SHOCK": "触电",
 	
+	"[SHOCKED]": "触电",
+	
 	"HEALING+": "无限魔力",
 	
 	"SKILLS": "技能",
 	"COOLDOWN": "冷却秒数",
 	
-	"{:<15} {:<15} {:<15} {:<15} {:<15}": "{:<10} {:<10} {:<10} {:<10} {:<10}",
+	"You are dead": "你被击败了",
+	"You lose": "你输了",
+	"Enemy down": "打倒了敌人",
+	"You win": "你赢了"
 	
 	
 }
 		
 WEAPONS = [
 	["5.56x45mm LMG",  "A light machinegun made by Belgium", 8, 15, 300, 4,   0],
-	["7.62x39mm LMG",  "A light machinegun made by USSR",   18, 10, 300, 12, -5],
-	["12.7x99mm HMG",  "A heavy machinegun made by USA",    30, 5, 100, 30, -30],
-	["12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 7, 100, 35, -35],
-	["9mm Classic SMG", "A submachinegun made by Italy",     5, 50, 800, 2,  10],
+	["7.62x39mm LMG",  "A light machinegun made by USSR",   18, 10, 300, 12, -5], # boss 1 used
+	["12.7x99mm HMG",  "A heavy machinegun made by USA",    33, 10, 100, 30, -30],
+	["12.7x108mm HMG", "A heavy machinegun made by Russia", 45, 7, 100, 35, -35],
+	["7.62 Gatling",     "A gatling gun made by USA",       22, 35, 800, 2,  -40], # boss 2 used
 	["Storm array",     "A bullet launcher likes storm",     8, 200, 2400, 8, -12],
-	["RPG Classic",    "A rocket launcher made by Russia", 2000,   1,   15, 60, -50],
+	["RPG Classic",    "A rocket launcher made by Russia", 1500,   1,   15, 60, -50],
 ]
 
 HERO = [
@@ -333,10 +342,10 @@ SKILLS = [
 ]
 
 STATUS = [
-	["BURN",      5,  -5, -5,   True, -150],
-	["SHOCK",     5, -25, -25, False, -20],
+	["BURN",      5,  -5, -5,   True, -3],
+	["SHOCK",     5, -25, -25, False, -1],
     ["HEALING",   5,   0, 0,    True, 100],
-    ["HEALING+", 150,  0, 0,    True, 40]
+    ["HEALING+", 150,  0, 0,    True, 2]
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"

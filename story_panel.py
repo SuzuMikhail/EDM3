@@ -9,7 +9,7 @@ import common
 _ = common.translate
 
 def story():
-	story_level = 1
+	story_level = 2
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
