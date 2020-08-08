@@ -231,16 +231,28 @@ _ = common.translate
 STR_ZH = {
 	"5.56x45mm LMG": "5.56毫米轻机枪",
 	"7.62x39mm LMG": "7.62苏式轻机枪",
-	"12.7x99mm HMG": "12.7美式重机枪",
+	"12.7x99mm HMG": "12.7老式重机枪",
 	
 	"NAME": "名称",
 	"AMMO": "弹药",
 	"MAX": "最大",
+	"MANA": "魔力",
+	"MAXMN": "最大魔力",
+	"STATUS": "状态",
+	"SECOND": "秒数",
+	"Switch weapon": "切换武器",
+	
+	"Current cover": "当前掩体",
 	
 	"MP COST": "消耗魔力",
 	
+	"COMMAND?(LOW CASE)>": "指令？（小写）>",
 	"NEXT": "下一步",
-	"INVENTORY": "仓库"
+	"INVENTORY": "仓库",
+	
+	"You": "你",
+	"New world godness": "新世界女神",
+	
 }
 		
 WEAPONS = [

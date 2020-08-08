@@ -51,7 +51,7 @@ def print_main_menu():
 	
 def main_menu():
 	print_main_menu()
-	cmd_char = input("COMMAND?>")
+	cmd_char = input(_("COMMAND?(LOW CASE)>"))
 	if cmd_char is "e":
 		return True
 	elif cmd_char is "i":

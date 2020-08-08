@@ -24,8 +24,8 @@ def init():
 		covers.append(Cover(i[0], i[1], i[2], i[3], i[4]))
 			
 	global battlers
-	battlers.append(Battler("You", HERO[0]))
-	battlers.append(Battler(BOSSES[0][0], BOSSES[0][1], BOSSES[0][2], BOSSES[0][3]))
+	battlers.append(Battler(_("You"), HERO[0]))
+	battlers.append(Battler(_(BOSSES[0][0]), BOSSES[0][1], BOSSES[0][2], BOSSES[0][3]))
 	battlers[0].equip_weapon(weapons[0])
 	battlers[0].equip_weapon(weapons[2])
 	battlers[1].equip_weapon(weapons[1])
@@ -370,7 +370,7 @@ def update_skill_cooldown():
 			i.reduce_keep_turn()
 		
 def print_battlersStatus():
-	print("{:<20} {:<6}   {:<6} {:<6}".format("NAME", "MANA", "MAXMN", "STATUS"))
+	print("{:<20} {:<6}   {:<6} {:<6}".format(_("NAME"), _("MANA"), _("MAXMN"), _("STATUS")))
 	for i in range(2):
 		name = battlers[i].name
 		hp = battlers[i].hp
@@ -419,7 +419,7 @@ def print_currentweapon(battler, detail=False):
 		print(COLORS.ENDC, end="")
 		
 def print_currentCover(battler):
-	print("Current cover: ", end="")
+	print(_("Current cover") + ": ", end="")
 	if battler.is_covered():
 		c = battler.cover_object
 		print("{:<10} {:<6} / {:<6}".format(c.name, c.hp, c.maxhp))
@@ -435,7 +435,7 @@ def print_skills(battler):
 		print("    " + i.desc)
 
 def print_commands():
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[1]-[4]", "Switch weapon", "", "", ""))
+	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[1]-[4]", _("Switch weapon"), "", "", ""))
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[W]:FIRE", "", "[R]:RELOAD", "[I]:INFO"))
 	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[S]:TAKE COVER", "", "", ""))
 	if not battlers[0].skills:
@@ -465,7 +465,7 @@ def battle_scene(story_id):
 		print_without_enter(COLORS.BOLD)
 		print_hugebar("STATUS")
 		print_without_enter(COLORS.ENDC)
-		print("[Second: %s]" % turn)
+		print("[" + _("SECOND") + ": %s]" % turn)
 		print_battlersStatus()
 		print_currentCover(battlers[0])
 		#print_bar("APPROXIMATE HIT/EVADE %")
