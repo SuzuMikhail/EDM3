@@ -31,10 +31,10 @@ def enter_episode(story_id=0):
 
 	storyfile_suffix = ".txt"
 	
-	for i in open(story_path + story[story_id] + storyfile_suffix):
-		sys.stdout.write(i)
+	for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
+		print(i, end="")
 		sys.stdout.flush()
-		#time.sleep(.6)
+		time.sleep(.6)
 	print("")
 
 	while 1:

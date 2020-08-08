@@ -229,9 +229,19 @@ class Shield:
 _ = common.translate
 
 STR_ZH = {
+	"_en" : "_zh",
+
 	"5.56x45mm LMG": "5.56毫米轻机枪",
 	"7.62x39mm LMG": "7.62苏式轻机枪",
 	"12.7x99mm HMG": "12.7老式重机枪",
+	
+	"You": "你",
+	"New world godness": "新世界女神",
+	
+	"Forest": "森林",
+	"Street": "街道",
+	"Building": "高楼",
+	"Sun": "太阳",
 	
 	"NAME": "名称",
 	"AMMO": "弹药",
@@ -242,16 +252,45 @@ STR_ZH = {
 	"SECOND": "秒数",
 	"Switch weapon": "切换武器",
 	
+	"(%s hit, %s damage)": "（命中 %s 次, 造成 %s 点伤害）",
+	
+	"EVAD": "回避",
+	"MISS": "失误",
+	">AMMO OUT<": ">弹药耗尽<",
+	
 	"Current cover": "当前掩体",
 	
-	"MP COST": "消耗魔力",
+	"HIT%: {:<4} EVADE%: {:<4}": "命中率： {:>4}% 回避率： {:>4}%",
+	
+	"HP": "耐久",
+	"MAXHP": "最大",
+	"HITMAX%": "命中加成%",
+	"EVADEMAX%": "回避加成%",
+	
+	"MP COST": "消耗",
 	
 	"COMMAND?(LOW CASE)>": "指令？（小写）>",
 	"NEXT": "下一步",
 	"INVENTORY": "仓库",
+	"FIRE": "开火",
+	"TAKE COVER": "寻求掩体",
+	"RELOAD": "装填",
 	
-	"You": "你",
-	"New world godness": "新世界女神",
+	"FIRE": "烈火诅咒",
+	"ICE POWER": "寒冰之力",
+	"BOLT": "雷霆冲击",
+	"HEAL": "魔力恢复",
+	
+	"BURN": "燃烧",
+	"SHOCK": "触电",
+	
+	"HEALING+": "无限魔力",
+	
+	"SKILLS": "技能",
+	"COOLDOWN": "冷却秒数",
+	
+	"{:<15} {:<15} {:<15} {:<15} {:<15}": "{:<10} {:<10} {:<10} {:<10} {:<10}",
+	
 	
 }
 		

@@ -21,7 +21,7 @@ def init():
 		
 	global covers
 	for i in COVERS:
-		covers.append(Cover(i[0], i[1], i[2], i[3], i[4]))
+		covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
 			
 	global battlers
 	battlers.append(Battler(_("You"), HERO[0]))
@@ -34,15 +34,15 @@ def init():
 
 	global status
 	for i in STATUS:
-		status.append(Status(i[0], i[1], i[2], i[3], i[4], i[5]))
+		status.append(Status(_(i[0]), i[1], i[2], i[3], i[4], i[5]))
 	
 
 	global skills
 	for i in SKILLS:
 		if i[3] or i[3] == 0:
-			skills.append(Skill(i[0], i[1], i[2], status[i[3]], i[4]))
+			skills.append(Skill(_(i[0]), i[1], i[2], status[i[3]], i[4]))
 		else:
-			skills.append(Skill(i[0], i[1], i[2], None, i[4]))
+			skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
 	skills[0].hp_cost = int(battlers[0].hp * 0.03)
 	skills[1].hp_cost = -int(battlers[0].hp / 5)
 	skills[2].hp_cost = int(battlers[0].hp * 0.04)
@@ -126,10 +126,10 @@ def attack_in_turn(attacker, target):
 							total_damage += dmg
 					else:
 						print_without_enter(COLORS.CYAN)
-						print("EVAD ", end="")
+						print(_("EVAD"), end=" ")
 				else:
 					print_without_enter(COLORS.BLUE)
-					print("MISS ", end="")
+					print(_("MISS"), end=" ")
 					
 					
 				if target_is_covered: #If evade or missed, cover takes damage
@@ -143,25 +143,25 @@ def attack_in_turn(attacker, target):
 			print_without_enter(COLORS.ENDC)
 			
 			dmg = orig_dmg #Clear critical bonus
-			print("")
 			if (i + 1) % 10 == 0:
 				print("", end="\n")
 			
 	return total_hit, total_damage
 
 def show_damage(hit, dmg):
-	print("(%s hit, %s damage)" % (hit, dmg))
+	print("")
+	print(_("(%s hit, %s damage)") % (hit, dmg))
 	
 def show_covers():
 	print_hugebar("COVER")
-	print("{:<6} {:<10} {:<6}   {:<6} {:<9} {:<9}".format("INDEX", "NAME", "HP", "MAXHP", "HITMAX%", "EVADEMAX%"))
+	print("{:<3} {:<10} {:<6}   {:<6} {:<9} {:<9}".format("ID", _("NAME"), _("HP"), _("MAXHP"), _("HITMAX%"), _("EVADEMAX%")))
 	for i, j in enumerate(covers):
 		name = j.name
 		hp = j.hp
 		maxhp = j.maxhp
 		hit_bouns = j.hit_bouns
 		evade_bouns = j.evade_bouns
-		print("{:<6} {:<10} {:<6} / {:<6} {:<9} {:<9}".format(i + 1, name, hp, maxhp, hit_bouns, evade_bouns))
+		print("{:<3} {:<10} {:<6} / {:<6} {:<9} {:<9}".format(i + 1, name, hp, maxhp, hit_bouns, evade_bouns))
 		
 	print_hugebar()
 	
@@ -240,7 +240,7 @@ def command_perform(cmd_char):
 	if cmd_char is "w":
 		wp = battlers[0].get_current_weapon()
 		if wp.is_magazine_empty():
-			print(">AMMO OUT<")
+			print(_(">AMMO OUT<"))
 			return False
 		else:
 			hit, dmg = attack_in_turn(battlers[0], battlers[1])
@@ -370,7 +370,7 @@ def update_skill_cooldown():
 			i.reduce_keep_turn()
 		
 def print_battlersStatus():
-	print("{:<20} {:<6}   {:<6} {:<6}".format(_("NAME"), _("MANA"), _("MAXMN"), _("STATUS")))
+	print("{:<}\t\t {:<}\t   {:<}\t {:<}".format(_("NAME"), _("MANA"), _("MAXMN"), _("STATUS")))
 	for i in range(2):
 		name = battlers[i].name
 		hp = battlers[i].hp
@@ -381,7 +381,7 @@ def print_battlersStatus():
 		elif hp <= int(maxhp / 3):
 			print_without_enter(COLORS.RED)	
 				
-		print("{:<20} {:<6} / {:<6}".format(name, hp, maxhp), end="")
+		print("{:<}\t\t {:<}\t / {:<}\t ".format(name, hp, maxhp), end="")
 		
 		for i in battlers[i].status:
 			
@@ -392,7 +392,7 @@ def print_battlersStatus():
 		
 		
 def print_final_percent():
-	print("HIT%: {:<4} EVADE%: {:<4}".format(get_attacker_final_hit_percent(battlers[0]), get_target_final_evade_percent(battlers[0])))
+	print(_("HIT%: {:<4} EVADE%: {:<4}").format(get_attacker_final_hit_percent(battlers[0]), get_target_final_evade_percent(battlers[0])))
 	
 def print_currentweapon(battler, detail=False):
 	if detail:
@@ -435,27 +435,27 @@ def print_skills(battler):
 		print("    " + i.desc)
 
 def print_commands():
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[1]-[4]", _("Switch weapon"), "", "", ""))
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[W]:FIRE", "", "[R]:RELOAD", "[I]:INFO"))
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("", "[S]:TAKE COVER", "", "", ""))
+	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("[1]-[4]", _("Switch weapon"), "", "", ""))
+	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("", "[W]:" + _("FIRE"), "", "[R]:" + _("RELOAD"), "[I]:INFO"))
+	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("", "[S]:" + _("TAKE COVER"), "", "", ""))
 	if not battlers[0].skills:
 		return
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("[Z]:" + skills[0].name,
+	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("[Z]:" + skills[0].name,
 												"[X]:" + skills[1].name, 
 												"[C]:" + skills[2].name,
 												"[V]:" + skills[3].name,
-												"SKILLS"))
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format(skills[0].hp_cost,
+												_("SKILLS")))
+	print("{:<}\t\t {:<}\t\t {:<}\t\t {:<}\t\t {:<}".format(skills[0].hp_cost,
 												skills[1].hp_cost, 
 												skills[2].hp_cost,
 												skills[3].hp_cost,
-												"HP COST"))
+												_("MP COST")))
 	print_without_enter(COLORS.GREEN)
-	print("{:<15} {:<15} {:<15} {:<15} {:<15}".format(skills[0].cooldown,
+	print("{:<}\t\t {:<}\t\t {:<}\t\t {:<}\t\t {:<}".format(skills[0].cooldown,
 												skills[1].cooldown, 
 												skills[2].cooldown,
 												skills[3].cooldown,
-												"COOLDOWN"))
+												_("COOLDOWN")))
 	print_without_enter(COLORS.ENDC)
 
 def battle_scene(story_id):
@@ -468,8 +468,8 @@ def battle_scene(story_id):
 		print("[" + _("SECOND") + ": %s]" % turn)
 		print_battlersStatus()
 		print_currentCover(battlers[0])
-		#print_bar("APPROXIMATE HIT/EVADE %")
-		#print_final_percent()
+		print_bar(_("APPROXIMATE HIT/EVADE %"))
+		print_final_percent()
 		print_hugebar()
 		
 		print_currentweapon(battlers[0])
@@ -478,7 +478,7 @@ def battle_scene(story_id):
 		
 		
 		while 1:
-			cmd = input("COMMAND?(LOW CASE)>")	
+			cmd = input(_("COMMAND?(LOW CASE)>"))
 			if cmd:
 				#print_bar("PLAYER ACTION")
 				cmd_char = cmd[0]
