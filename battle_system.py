@@ -14,7 +14,7 @@ covers = []
 status = []
 skills = []
 
-def init():
+def init(story_id):
 	global weapons
 	for i in WEAPONS:
 		weapons.append(Weapon(_(i[0]), i[1], i[2], i[3], i[4], i[5], i[6]))
@@ -22,20 +22,25 @@ def init():
 	global covers
 	for i in COVERS:
 		covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
-			
-	global battlers
-	battlers.append(Battler(_("You"), HERO[0]))
-	battlers.append(Battler(_(BOSSES[0][0]), BOSSES[0][1], BOSSES[0][2], BOSSES[0][3]))
-	battlers[0].equip_weapon(weapons[0])
-	battlers[0].equip_weapon(weapons[2])
-	battlers[1].equip_weapon(weapons[1])
-	battlers[1].equip_weapon(weapons[3])
-	#battlers[1].hold_weapon(0)
 
 	global status
 	for i in STATUS:
 		status.append(Status(_(i[0]), i[1], i[2], i[3], i[4], i[5]))
 	
+	global battlers
+	battlers.append(Battler(_("You"), HERO[story_id - 1]))
+	
+	battlers.append(Battler(_(BOSSES[story_id - 1][0]), BOSSES[story_id - 1][1], BOSSES[story_id - 1][2], BOSSES[story_id - 1][3]))
+	battlers[0].equip_weapon(weapons[0])
+	battlers[0].equip_weapon(weapons[2])
+	battlers[0].equip_weapon(weapons[5])
+	if story_id == 1:
+		battlers[1].equip_weapon(weapons[1])
+		battlers[1].equip_weapon(weapons[3])
+		battlers[1].add_status(status[3])
+	elif story_id == 2:
+		battlers[1].equip_weapon(weapons[4])
+		battlers[1].equip_weapon(weapons[6])
 
 	global skills
 	for i in SKILLS:
@@ -51,7 +56,6 @@ def init():
 	for i in skills:
 		battlers[0].add_skill(i)
 		
-	battlers[1].add_status(status[3])
 	
 def reset():
 	weapons.clear()
@@ -145,12 +149,16 @@ def attack_in_turn(attacker, target):
 			dmg = orig_dmg #Clear critical bonus
 			if (i + 1) % 10 == 0:
 				print("", end="\n")
+				
+			common.wait_and_flush(1 / rps)
+			
 			
 	return total_hit, total_damage
 
 def show_damage(hit, dmg):
 	print("")
 	print(_("(%s hit, %s damage)") % (hit, dmg))
+	common.wait_and_flush()
 	
 def show_covers():
 	print_hugebar("COVER")
@@ -205,7 +213,7 @@ def battler_switch_weapon(battler, id):
 		print("[NO WEAPON IN SLOT]")
 		return False
 	print_without_enter(COLORS.GREEN)
-	print("[SWITCH WEAPON TO %s]" % wp.name)
+	print("[SWITCH WEAPON TO %s]" % weapons[id].name)
 	print_without_enter(COLORS.ENDC)
 	battler.hold_weapon(id)
 	return True
@@ -287,12 +295,16 @@ def command_perform(cmd_char):
 	return True
 	
 def enemy_action(story_id):
+	ready_for_next_fire = False
+	player_lastturn_is_covered = False
+	
 	if battlers[1].is_movable == False:
 		print("[SHOCKED]")
 		return
 	wp = battlers[1].get_current_weapon()
-	if wp.is_magazine_empty():
-		if story_id == 1:
+	
+	if story_id == 1:
+		if wp.is_magazine_empty():
 			wp1 = battlers[1].weapons[0]
 			wp2 = battlers[1].weapons[1]
 			if wp1.is_magazine_empty() and wp2.is_magazine_empty():
@@ -306,17 +318,33 @@ def enemy_action(story_id):
 				battler_switch_weapon(battlers[1], 1)
 			else:
 				battler_switch_weapon(battlers[1], 0)
-		else:
-			battler_reload(battlers[1])
-		return 
+		
+	elif story_id == 2:
+		if not ready_for_next_fire:
+			if battlers[0].is_covered():
+				battler_switch_weapon(battlers[1], 1)
+				ready_for_next_fire = True
+				player_lastturn_is_covered = True
+				return
+			else:
+				player_lastturn_is_covered = False
+				battler_reload(battlers[1])
+				battler_switch_weapon(battlers[1], 0)
+				return
+		
+		if ready_for_next_fire:
+			ready_for_next_fire = False
+	
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
 	
 def is_win(battlers):
 	if battlers[0].is_dead():
+		print_hugebar()
 		print("You are dead")
 		return -1
 	elif battlers[1].is_dead():
+		print_hugebar()
 		print("Enemy down")
 		return 1
 	else:
@@ -326,9 +354,11 @@ def check_win():
 	party_state = is_win(battlers)
 	if party_state < 0:
 		print("You lose")
+		print_hugebar()
 		return False
 	elif party_state > 0:
 		print("You win")
+		print_hugebar()
 		return True
 		
 def check_cover(battler):
@@ -337,7 +367,7 @@ def check_cover(battler):
 	c = battler.cover_object
 	if c.is_dead():
 		print_without_enter(COLORS.RED)
-		print("[COVER IS BROKEN]")
+		print(_("[COVER IS BROKEN]"))
 		print_without_enter(COLORS.ENDC)
 		battler.leave_cover()
 		
@@ -357,11 +387,15 @@ def check_status():
 				i.hp_change(j.hp_change)
 				i.add_hit_bouns(j.hit_bouns)
 				i.add_evade_bouns(j.evade_bouns)
-				i.is_movable = j.is_movable
+				if j.name != status[1].name:
+					i.is_movable = j.is_movable
 				
 				print("%s MP + %s" % (i.name, j.hp_change))
 				
 			j.reduce_keep_turn()
+			common.wait_and_flush()
+	
+	
 			
 		
 def update_skill_cooldown():
@@ -512,6 +546,12 @@ def battle_scene(story_id):
 			
 		
 def main(story_id=1):
-	init()
-	battle_scene(story_id)
+	init(story_id)
+	if battle_scene(story_id):
+		reset()
+		return True
+	else:
+		reset()
+		return False
+		return alse
 	

@@ -12,7 +12,7 @@ def story():
 	story_level = 1
 	while 1:
 		if enter_episode(story_level):
-			if battle_system.main():
+			if battle_system.main(story_level):
 				story_level += 1
 		
 
@@ -21,12 +21,14 @@ def enter_episode(story_id=0):
 
 	story = [
 		"ep0",
-		"ep1"
+		"ep1",
+		"ep2",
 	]
 	
 	enemy_id = [
 		0,
 		1,
+		2,
 	]
 
 	storyfile_suffix = ".txt"
@@ -34,7 +36,7 @@ def enter_episode(story_id=0):
 	for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
 		print(i, end="")
 		sys.stdout.flush()
-		time.sleep(.6)
+		#time.sleep(.6)
 	print("")
 
 	while 1:

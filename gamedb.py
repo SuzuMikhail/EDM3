@@ -234,6 +234,8 @@ STR_ZH = {
 	"5.56x45mm LMG": "5.56毫米轻机枪",
 	"7.62x39mm LMG": "7.62苏式轻机枪",
 	"12.7x99mm HMG": "12.7老式重机枪",
+	"Storm array": "风暴阵列",
+	"RPG Classic": "经典 RPG",
 	
 	"You": "你",
 	"New world godness": "新世界女神",
@@ -260,7 +262,7 @@ STR_ZH = {
 	
 	"Current cover": "当前掩体",
 	
-	"HIT%: {:<4} EVADE%: {:<4}": "命中率： {:>4}% 回避率： {:>4}%",
+	"HIT%: {:<4} EVADE%: {:<4}": "命中率参考值： {:>4}% 回避率参考值： {:>4}%",
 	
 	"HP": "耐久",
 	"MAXHP": "最大",
@@ -275,8 +277,9 @@ STR_ZH = {
 	"FIRE": "开火",
 	"TAKE COVER": "寻求掩体",
 	"RELOAD": "装填",
+	"[COVER IS BROKEN]": "[掩体损坏]",
 	
-	"FIRE": "烈火诅咒",
+	"FIRE CURSE": "烈火诅咒",
 	"ICE POWER": "寒冰之力",
 	"BOLT": "雷霆冲击",
 	"HEAL": "魔力恢复",
@@ -299,7 +302,9 @@ WEAPONS = [
 	["7.62x39mm LMG",  "A light machinegun made by USSR",   18, 10, 300, 12, -5],
 	["12.7x99mm HMG",  "A heavy machinegun made by USA",    30, 5, 100, 30, -30],
 	["12.7x108mm HMG", "A heavy machinegun made by Russia", 40, 7, 100, 35, -35],
-	["9mm Classic SMG", "A submachinegun made by Italy",     5, 50, 800, 2,  10]
+	["9mm Classic SMG", "A submachinegun made by Italy",     5, 50, 800, 2,  10],
+	["Storm array",     "A bullet launcher likes storm",     8, 200, 2400, 8, -12],
+	["RPG Classic",    "A rocket launcher made by Russia", 2000,   1,   15, 60, -50],
 ]
 
 HERO = [
@@ -321,7 +326,7 @@ COVERS = [
 ]
 
 SKILLS = [
-	["FIRE",      "Burn enemy and keep them burning",        80,   0,  15],
+	["FIRE CURSE",      "Burn enemy and keep them burning",        80,   0,  15],
 	["ICE POWER", "Heal yourself",                            0, None, 15],
 	["BOLT",       "Shock enemy and make them can not move", 100,  1,  23],
 	["HEAL",      "Heal yourself",                           0, None, 30]
