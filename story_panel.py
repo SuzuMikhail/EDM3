@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+
 import time
 import sys
 from gamedb import LEVEL_UP_MSG
 import battle_system
+import common
 
+_ = common.translate
 
 def story():
 	story_level = 1
@@ -43,7 +47,7 @@ def print_victory(story_id=0):
 	print(LEVEL_UP_MSG)
 	
 def print_main_menu():
-	print("{:<15} {:<15} {:<15}".format("", "[E]:Next", "[I]:Inventory"))
+	print("{:<15} {:<15} {:<15}".format("", "[E]:" + _("NEXT"), "[I]:" + _("INVENTORY")))
 	
 def main_menu():
 	print_main_menu()

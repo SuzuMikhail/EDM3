@@ -3,8 +3,10 @@ import sys
 import time
 
 import story_panel
-
+import common
 from gamedb import *
+
+_ = common.translate
 
 weapons = []
 battlers = []
@@ -15,7 +17,7 @@ skills = []
 def init():
 	global weapons
 	for i in WEAPONS:
-		weapons.append(Weapon(i[0], i[1], i[2], i[3], i[4], i[5], i[6]))
+		weapons.append(Weapon(_(i[0]), i[1], i[2], i[3], i[4], i[5], i[6]))
 		
 	global covers
 	for i in COVERS:
@@ -394,10 +396,10 @@ def print_final_percent():
 	
 def print_currentweapon(battler, detail=False):
 	if detail:
-		print("{:<3} {:<15} {:<4} {:<4} {:<5} {:<8} {:<6} {:<6}".format("ID", "NAME", "DMG", "DPS", "AMMO", "MAX", "CRIT%", "HIT%"))
+		print("{:<3} {:<15} {:<4} {:<4} {:<5} {:<8} {:<6} {:<6}".format("ID", _("NAME"), "DMG", "DPS", "AMMO", "MAX", "CRIT%", "HIT%"))
 	else:
-		print("{:<3} {:<15} {:<5} {:<8}".format("ID", "NAME", "AMMO", "MAX"))
-	for j, i in enumerate(battler.weapons):
+		print("{:<3} {:<15} {:<5} {:<8}".format("ID", _("NAME"), _("AMMO"), _("MAX")))
+	for j, i in enumerate(battler.weapons): 
 		name = i.name
 		dmg = i.dmg
 		rps = i.rps
@@ -427,7 +429,7 @@ def print_currentCover(battler):
 	print_without_enter(COLORS.ENDC)
 	
 def print_skills(battler):
-	print("{:<10} {:<8}".format("NAME", "MP COST"))
+	print("{:<10} {:<8}".format(_("NAME"), _("MP COST")))
 	for i in battler.skills:
 		print("{:<10} {:<8}".format(i.name, i.hp_cost))
 		print("    " + i.desc)

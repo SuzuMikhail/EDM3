@@ -1,12 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import random
-#import gettext
+import common
 
 import os
-"""
-localedir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
-translate = gettext.translation('handroll', localedir, fallback=True)
-_ = translate.gettext
-"""
+
+LANG_ZH = False
 
 class COLORS:
 	ENDC = '\033[0m'
@@ -227,6 +226,22 @@ class Shield:
 		self.hit_bouns = 0
 		self.evade_bouns = 0
 		
+_ = common.translate
+
+STR_ZH = {
+	"5.56x45mm LMG": "5.56毫米轻机枪",
+	"7.62x39mm LMG": "7.62苏式轻机枪",
+	"12.7x99mm HMG": "12.7美式重机枪",
+	
+	"NAME": "名称",
+	"AMMO": "弹药",
+	"MAX": "最大",
+	
+	"MP COST": "消耗魔力",
+	
+	"NEXT": "下一步",
+	"INVENTORY": "仓库"
+}
 		
 WEAPONS = [
 	["5.56x45mm LMG",  "A light machinegun made by Belgium", 8, 15, 300, 4,   0],
