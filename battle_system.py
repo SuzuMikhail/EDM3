@@ -3,10 +3,11 @@ import sys
 import time
 
 import story_panel
-import common
+from common import *
 from gamedb import *
+from gamedb import equiped_weapons
 
-_ = common.translate
+_ = translate
 
 weapons = []
 battlers = []
@@ -31,11 +32,8 @@ def init(story_id):
 	battlers.append(Battler(_("You"), HERO[story_id - 1]))
 	
 	battlers.append(Battler(_(BOSSES[story_id - 1][0]), BOSSES[story_id - 1][1], BOSSES[story_id - 1][2], BOSSES[story_id - 1][3]))
-	#battlers[0].equip_weapon(weapons[0])
-	#battlers[0].equip_weapon(weapons[2])
-	#battlers[0].equip_weapon(weapons[5])
-	for i in party_weapons:
-		battlers[0].equip_weapon(equiped_weapons[i])
+	for i in equiped_weapons:
+		battlers[0].equip_weapon(weapons[i])
 		
 	if story_id == 1:
 		battlers[1].equip_weapon(weapons[1])
@@ -69,11 +67,6 @@ def reset():
 	status.clear()
 	skills.clear()
 
-def print_hugebar(s=""):
-	print(s.center(80, "="))
-	
-def print_bar(s=""):
-	print(s.center(80, "-"))
 
 def print_without_enter(s=""):
 	print(s, end="")
@@ -155,7 +148,7 @@ def attack_in_turn(attacker, target):
 			if (i + 1) % 10 == 0:
 				print("", end="\n")
 				
-			common.wait_and_flush(1 / rps)
+			wait_and_flush(1 / rps)
 			
 			
 	return total_hit, total_damage
@@ -163,7 +156,7 @@ def attack_in_turn(attacker, target):
 def show_damage(hit, dmg):
 	print("")
 	print(_("(%s hit, %s damage)") % (hit, dmg))
-	common.wait_and_flush()
+	wait_and_flush()
 	
 def show_covers():
 	print_hugebar("COVER")
@@ -408,7 +401,7 @@ def check_status():
 				print("%s MP + %s" % (i.name, hp_change))
 				
 			j.reduce_keep_turn()
-			common.wait_and_flush()
+			wait_and_flush()
 	
 	
 			

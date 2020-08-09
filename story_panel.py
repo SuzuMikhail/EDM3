@@ -7,13 +7,15 @@ from gamedb import WEAPONS
 from gamedb import LEVEL_UP_MSG
 from gamedb import Party
 from gamedb import party_weapons
+from gamedb import equiped_weapons
 import battle_system
-import common
+from common import *
 
-_ = common.translate
+_ = translate
 SCENE_NONE = 0
 SCENE_BATTLE = 1
 SCENE_INVENTORY = 2
+#equiped_weapons = []
 
 
 def story():
@@ -65,7 +67,7 @@ def enter_episode(story_id=0):
 			return False
 	
 def set_inventory(story_id=0):
-	party_weapons = []
+	#party_weapons = []
 	
 	if story_id == 1:
 		set_weapons([0, 2, 5])
@@ -86,10 +88,20 @@ def auto_equip(story_id):
 	for i in weapon_ids:
 		Party.equip_weapon(i)
 		
+def equip_weapon(id):
+	if id in party_weapons and not len(equiped_wepaons) >= 4:
+		Party.equip_weapon(id)
+		
+		
 def print_all_weapons():
+	print_hugebar("ALL WEAPONS")
 	print("%s  %s\t\t %s\t %s\t %s\t %s\t %s" % ("ID", _("NAME"), _("DMG"), _("RPS"), _("AMMO"), _("CRIT%"), _("HIT%")))
 	for j, i in enumerate(party_weapons):
-		print("%s  %s\t %s\t %s\t %s\t %s\t %s" % (j + 1, WEAPONS[i][0], WEAPONS[i][2], WEAPONS[i][3], WEAPONS[i][4], WEAPONS[i][5], WEAPONS[i][6]))
+		print("%s  %s\t %s\t %s\t %s\t %s\t %s" % (j + 1, _(WEAPONS[i][0]), WEAPONS[i][2], WEAPONS[i][3], WEAPONS[i][4], WEAPONS[i][5], WEAPONS[i][6]))
+	print_hugebar("EQUIPED WEAPONS")
+	for j, i in enumerate(equiped_weapons):
+		print("%s  %s\t %s\t %s\t %s\t %s\t %s" % (j + 1, _(WEAPONS[i][0]), WEAPONS[i][2], WEAPONS[i][3], WEAPONS[i][4], WEAPONS[i][5], WEAPONS[i][6]))
+	
 	
 def print_victory(story_id=0):
 	print(LEVEL_UP_MSG)
