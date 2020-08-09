@@ -224,7 +224,41 @@ class Shield:
 		self.hit_bouns = 0
 		self.evade_bouns = 0
 
-
+party_weapons = []
+equiped_weapons = []
+		
+class Party:
+	@staticmethod
+	def add_weapon(id):
+		party_weapons.append(id)
+	
+	@staticmethod
+	def remove_weapon(id):
+		del party_weapons[id]
+		
+	@staticmethod
+	def clear_weapon():
+		party_weapons.clear()
+		
+	@staticmethod
+	def equip_weapon(id):
+		equiped_weapons.append(id)
+		
+	@staticmethod
+	def unequip_weapon(id):
+		del equiped_weapons[id]
+		
+	@staticmethod
+	def unequip_all():
+		equiped_weapons.clear()
+		
+	@staticmethod
+	def is_equiped():
+		if equiped_weapons:
+			return True
+		else:
+			return False
+		
 STR_ZH = {
 	"_en" : "_zh",
 
@@ -307,13 +341,13 @@ STR_ZH = {
 }
 		
 WEAPONS = [
-	["5.56x45mm LMG",  "A light machinegun made by Belgium", 8, 15, 300, 4,   0],
-	["7.62x39mm LMG",  "A light machinegun made by USSR",   18, 10, 300, 12, -5], # boss 1 used
-	["12.7x99mm HMG",  "A heavy machinegun made by USA",    33, 10, 100, 30, -30],
-	["12.7x108mm HMG", "A heavy machinegun made by Russia", 45, 7, 100, 35, -35],
-	["7.62 Gatling",     "A gatling gun made by USA",       22, 35, 800, 2,  -40], # boss 2 used
-	["Storm array",     "A bullet launcher likes storm",     8, 200, 2400, 8, -12],
-	["RPG Classic",    "A rocket launcher made by Russia", 1500,   1,   15, 60, -50],
+	["5.56x45mm LMG",  "",     8, 15, 300, 4,   0],
+	["7.62x39mm LMG",  "",    18, 10, 300, 12, -5], # boss 1 used
+	["12.7x99mm HMG",  "",    33, 10, 100, 30, -30],
+	["12.7x108mm HMG", "",    45, 7, 100, 35, -35],
+	["7.62 Gatling",   "",    22, 35, 800, 2,  -40], # boss 2 used
+	["Storm array",    "",     8, 200, 2400, 8, -12],
+	["RPG Classic",    "",  1500,   1,   15, 60, -50],
 ]
 
 HERO = [

@@ -31,9 +31,12 @@ def init(story_id):
 	battlers.append(Battler(_("You"), HERO[story_id - 1]))
 	
 	battlers.append(Battler(_(BOSSES[story_id - 1][0]), BOSSES[story_id - 1][1], BOSSES[story_id - 1][2], BOSSES[story_id - 1][3]))
-	battlers[0].equip_weapon(weapons[0])
-	battlers[0].equip_weapon(weapons[2])
-	battlers[0].equip_weapon(weapons[5])
+	#battlers[0].equip_weapon(weapons[0])
+	#battlers[0].equip_weapon(weapons[2])
+	#battlers[0].equip_weapon(weapons[5])
+	for i in party_weapons:
+		battlers[0].equip_weapon(equiped_weapons[i])
+		
 	if story_id == 1:
 		battlers[1].equip_weapon(weapons[1])
 		battlers[1].equip_weapon(weapons[3])
