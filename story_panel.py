@@ -2,6 +2,7 @@
 
 import time
 import sys
+from gamedb import COLORS
 from gamedb import Weapon
 from gamedb import WEAPONS
 from gamedb import LEVEL_UP_MSG
@@ -63,7 +64,9 @@ def enter_episode(story_id=0):
 			inventory_is_ok = True
 			
 		if not Party.is_equiped():
-			print(_("No weapon equiped, weapon was equiped automatically."))
+			print_without_enter(COLORS.GREEN)
+			print(_("[No weapon equiped, weapon was equiped automatically.]"))
+			print_without_enter(COLORS.ENDC)
 			auto_equip(story_id)
 			
 		i = main_menu() 

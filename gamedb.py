@@ -281,6 +281,7 @@ STR_ZH = {
 	"Street": "街道",
 	"Building": "高楼",
 	"Sun": "太阳",
+	"Sea": "大海",
 	
 	"NAME": "名称",
 	"DMG": "伤害",
@@ -313,9 +314,10 @@ STR_ZH = {
 	"MP COST": "消耗",
 	
 	"COMMAND?(LOW CASE)>": "指令？（小写）>",
+	"COVER COMMAND?>": "掩体指令？>",
 	"INVENTORY COMMAND?(LOW CASE)>": "仓库指令？（小写）>",
 	"[NUMBERS]: Equip, [D]: Disarm all, [0]: Exit": "[数字]: 装备, [D]: 解除所有装备, [0]: 退出",
-	"No weapon equiped, weapon was equiped automatically.": "无武器被装备，已自动装备武器。",
+	"[No weapon equiped, weapon was equiped automatically.]": "[无武器被装备，已自动装备武器。]",
 	
 	"NEXT": "下一步",
 	"INVENTORY": "仓库",
@@ -330,14 +332,19 @@ STR_ZH = {
 	"[COVER IS NOT USABLE]": "[掩体不可用]",
 	"[SLOT IS FULL]": "[槽位已满]",
 	"Cover changed to: %s ": "切换至掩体: %s",
+	"PLEASE INPUT LEGAL COMMAND": "请输入正确指令",
+	"Fire was disappeared due to you jumped in sea.": "由于跳入了海中，身上的火熄灭了。",
+	"[SWITCH WEAPON TO %s]": "[切换武器至 %s]",
 	
 	"FIRE CURSE": "烈火诅咒",
 	"ICE POWER": "寒冰之力",
 	"BOLT": "雷霆冲击",
 	"HEAL": "魔力恢复",
+	"CHMICAL FIRE": "化学烈焰",
 	
 	"BURN": "燃烧",
 	"SHOCK": "触电",
+	"C.BURN": "化学燃烧",
 	
 	"[SHOCKED]": "触电",
 	
@@ -349,7 +356,7 @@ STR_ZH = {
 	"You are dead": "你被击败了",
 	"You lose": "你输了",
 	"Enemy down": "打倒了敌人",
-	"You win": "你赢了"
+	"You win": "你赢了",
 	
 	"LEVEL UP!": "等级提升！",
 	"New items are in your inventory.": "新的道具已经收进了你的仓库。",
@@ -360,9 +367,9 @@ WEAPONS = [
 	["7.62x39mm LMG",  "",    18, 10, 300, 12, -5], # boss 1 used
 	["12.7x99mm HMG",  "",    30, 8, 100, 30, -30],
 	["12.7x108mm HMG", "",    48, 7, 100, 35, -35],
-	["7.62 Gatling",   "",    22, 35, 800, 2,  -40], # boss 2 used
+	["7.62 Gatling",   "",    22, 45, 800, 2,  -38], # boss 2 used
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
-	["RPG Classic",    "",  1500,   1,   15, 60, -50],
+	["RPG Classic",    "",  2000,   1,   15, 60, -25],
 ]
 
 HERO = [
@@ -380,21 +387,24 @@ COVERS = [
 	["Forest", 10000, -50, 70, False],
 	["Street", 20000, -40, 50, False],
 	["Building", 10000, 0, 20, False],
-	["Sun",     99999, 40, -20, True]
+	["Sun",     99999, 40, -20, True],
+	["Sea",    999999, -100, -100, False]
 ]
 
 SKILLS = [
 	["FIRE CURSE",      "Burn enemy and keep them burning",        80,   0,  15],
 	["ICE POWER", "Heal yourself",                            0, None, 15],
 	["BOLT",       "Shock enemy and make them can not move", 100,  1,  23],
-	["HEAL",      "Heal yourself",                           0, None, 30]
+	["HEAL",      "Heal yourself",                           0, None, 30],
+	["CHMICAL FIRE", "",                                      0,   4,  20]
 ]
 
 STATUS = [
 	["BURN",      5,  -5, -5,   True, -3],
 	["SHOCK",     5, -25, -25, False, -1],
     ["HEALING",   5,   0, 0,    True, 100],
-    ["HEALING+", 150,  0, 0,    True, 0.5]
+    ["HEALING+", 150,  0, 0,    True, 0.5],
+	["C.BURN",    20,  -30, -30, True, -6]
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"

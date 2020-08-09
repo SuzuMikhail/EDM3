@@ -35,6 +35,21 @@ def init(story_id):
 	for i in equiped_weapons:
 		battlers[0].equip_weapon(weapons[i])
 		
+	global skills
+	for i in SKILLS:
+		if i[3] or i[3] == 0:
+			skills.append(Skill(_(i[0]), i[1], i[2], status[i[3]], i[4]))
+		else:
+			skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
+			
+	skills[0].hp_cost = int(battlers[0].hp * 0.03)
+	skills[1].hp_cost = -int(battlers[0].hp / 5)
+	skills[2].hp_cost = int(battlers[0].hp * 0.04)
+	skills[3].hp_cost = -int(battlers[0].hp / 3)
+	
+	for i in range(0, 4):
+		battlers[0].add_skill(skills[i])
+		
 	if story_id == 1:
 		battlers[1].equip_weapon(weapons[1])
 		battlers[1].equip_weapon(weapons[3])
@@ -42,20 +57,9 @@ def init(story_id):
 	elif story_id == 2:
 		battlers[1].equip_weapon(weapons[4])
 		battlers[1].equip_weapon(weapons[6])
+		skills[4].hp_cost = int(battlers[1].hp * 0.05)
+		battlers[1].add_skill(skills[4])
 
-	global skills
-	for i in SKILLS:
-		if i[3] or i[3] == 0:
-			skills.append(Skill(_(i[0]), i[1], i[2], status[i[3]], i[4]))
-		else:
-			skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
-	skills[0].hp_cost = int(battlers[0].hp * 0.03)
-	skills[1].hp_cost = -int(battlers[0].hp / 5)
-	skills[2].hp_cost = int(battlers[0].hp * 0.04)
-	skills[3].hp_cost = -int(battlers[0].hp / 3)
-
-	for i in skills:
-		battlers[0].add_skill(i)
 		
 	ready_for_next_fire = False
 	player_lastturn_is_covered = False
@@ -169,7 +173,7 @@ def show_covers():
 	
 def choose_covers():
 	print(_("[W]:Leave cover, [`][0]:Exit"))
-	id = input("COVER COMMAND:>")
+	id = input(_("COVER COMMAND?>"))
 	if id is "`" or id is "0":
 		return False
 	if id is "w":
@@ -180,18 +184,31 @@ def choose_covers():
 		else:
 			print(_("[NOT COVERED]"))
 			return False
+	
+	try:
+		id = int(id)
+	except ValueError:
+		print(_("PLEASE INPUT LEGAL COMMAND"))
+		return False
 		
-	id = int(id)
 	id -= 1
 	if covers[id].is_dead():
 		print_without_enter(COLORS.RED)
 		print(_("[COVER IS NOT USABLE]"))
 		print_without_enter(COLORS.ENDC)
 		return False
-	
+		
 	c = covers[id]
 	battlers[0].cover_object = c
 	print(_("Cover changed to: %s ") % c.name)
+	
+	if id is 4:
+		for j, i in enumerate(battlers[0].status):
+			if i.name is status[4].name:
+				print(_("Fire was disappeared due to you jumped in sea."))
+				remove_status(battlers[0], j)
+	
+	
 	return True
 	
 def battler_reload(battler):
@@ -207,7 +224,7 @@ def battler_switch_weapon(battler, id):
 		print("[NO WEAPON IN SLOT]")
 		return False
 	print_without_enter(COLORS.GREEN)
-	print("[SWITCH WEAPON TO %s]" % battler.weapons[id].name)
+	print(_("[SWITCH WEAPON TO %s]") % battler.weapons[id].name)
 	print_without_enter(COLORS.ENDC)
 	battler.hold_weapon(id)
 	return True
@@ -220,23 +237,24 @@ def print_playerinfo():
 	print_bar("SKILLS")
 	print_skills(battlers[0])
 	
-def use_skill(id):
-	s = battlers[0].skills[id]
-	print(s.cooldown)
-	print(s.cooldown_turn)
+def use_skill(attacker, target, id):
+	s = attacker.skills[id]
 	if not s.is_cooldown():
 		return False
 	
 	s.set_cooldown()
-	battlers[0].hp_change(-s.hp_cost)
+	attacker.hp_change(-s.hp_cost)
 	if s.status:
-		battlers[1].add_status(s.status)
+		target.add_status(s.status)
 	
 	print_bar("SKILL")
 	print_without_enter(COLORS.YELLOW)
 	print("%s" % s.name)
 	print_without_enter(COLORS.ENDC)
 	return True
+	
+def player_use_skill(id):
+	return use_skill(battlers[0], battlers[1], id)
 	
 def command_perform(cmd_char):
 	if cmd_char is "w":
@@ -257,13 +275,13 @@ def command_perform(cmd_char):
 		battler_reload(battlers[0])
 		return True
 	elif cmd_char is "z":
-		return use_skill(0)
+		return player_use_skill(0)
 	elif cmd_char is "x":
-		return use_skill(1)
+		return player_use_skill(1)
 	elif cmd_char is "c":
-		return use_skill(2)
+		return player_use_skill(2)
 	elif cmd_char is "v":
-		return use_skill(3)
+		return player_use_skill(3)
 	elif cmd_char is "i":
 		print_playerinfo()
 		return False
@@ -327,6 +345,8 @@ def enemy_action(story_id):
 				enemy_action.hold_rpg = True
 				return
 			else:
+				if use_skill(battlers[1], battlers[0], 0):
+					return
 				if enemy_action.hold_rpg:
 					battler_switch_weapon(battlers[1], 0)
 					enemy_action.hold_rpg = False
@@ -374,6 +394,13 @@ def check_cover(battler):
 		print_without_enter(COLORS.ENDC)
 		battler.leave_cover()
 		
+def remove_status(battler, id):
+	battler.remove_hit_bouns()
+	battler.remove_evade_bouns()
+	battler.is_movable = True
+	battler.remove_status(id)
+		
+		
 def check_status():
 	for i in battlers:
 		if not i.status:
@@ -382,10 +409,7 @@ def check_status():
 		print_bar("STATUS EFFECT")
 		for id, j in enumerate(i.status):
 			if j.is_dead():
-				i.remove_hit_bouns()
-				i.remove_evade_bouns()
-				i.is_movable = True
-				i.remove_status(id)
+				remove_status(i, id)
 			else:
 				hp_change = int(i.hp * (j.hp_change_percent / 100))
 				i.hp_change(hp_change)
