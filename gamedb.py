@@ -276,6 +276,7 @@ STR_ZH = {
 	"You": "你",
 	"New world godness": "新世界女神",
 	"Happy virus maker": "乐流感大师",
+	"VR Dominator": "ＶＲ支配者",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -374,7 +375,8 @@ WEAPONS = [
 
 HERO = [
 	3000,
-	6000
+	6000,
+	9000,
 ]
 
 BOSSES = [
