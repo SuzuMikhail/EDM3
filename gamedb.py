@@ -268,7 +268,8 @@ STR_ZH = {
 
 	"5.56x45mm LMG":   "5.56毫米轻机枪",
 	"7.62x39mm LMG":   "7.62苏式轻机枪",
-	"12.7x99mm HMG":   "12.7老式重机枪",
+	"12.7x99mm HMG":   "12.7美式重机枪",
+	"12.7x108mm HMG": "12.7苏式重机枪",
 	"Storm Generator": "风卷残云轻机枪",
 	"RPG Classic": "经典 RPG",
 	
@@ -322,11 +323,12 @@ STR_ZH = {
 	"TAKE COVER": "寻求掩体",
 	"RELOAD": "装填",
 	"[COVER IS BROKEN]": "[掩体损坏]",
-	"[RELOADING]": "正在装弹",
+	"[RELOADING]": "[正在装弹]",
 	"[W]:Leave cover, [`][0]:Exit": "[W]:离开掩体, [`][0]:返回",
 	"[LEAVE COVER]": "[离开掩体]",
-	"[NOT COVERED]": "无掩体",
-	"[COVER IS NOT USABLE]": "掩体不可用",
+	"[NOT COVERED]": "[无掩体]",
+	"[COVER IS NOT USABLE]": "[掩体不可用]",
+	"[SLOT IS FULL]": "[槽位已满]",
 	"Cover changed to: %s ": "切换至掩体: %s",
 	
 	"FIRE CURSE": "烈火诅咒",
@@ -349,7 +351,8 @@ STR_ZH = {
 	"Enemy down": "打倒了敌人",
 	"You win": "你赢了"
 	
-	
+	"LEVEL UP!": "等级提升！",
+	"New items are in your inventory.": "新的道具已经收进了你的仓库。",
 }
 		
 WEAPONS = [
@@ -395,3 +398,4 @@ STATUS = [
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"
+NEWITEM_MSG = "New items are in your inventory."

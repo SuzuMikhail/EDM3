@@ -10,7 +10,6 @@ from gamedb import party_weapons
 from gamedb import equiped_weapons
 import battle_system
 from common import *
-import pdb
 
 
 _ = translate
@@ -25,10 +24,11 @@ EXIT = 0
 
 
 def story():
-	story_level = 1
+	story_level = 2
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
+				print_victory()
 				story_level += 1
 		
 
@@ -107,7 +107,9 @@ def equip_wp(id):
 		Party.equip_weapon(id)
 		return True
 	else:
-		print("SLOT IS FULL")
+		print_without_enter(COLORS.RED)
+		print("[SLOT IS FULL]")
+		print_without_enter(COLORS.ENDC)
 		return False
 		
 		
@@ -133,7 +135,9 @@ def choose_weapon():
 		return EXIT
 	elif cmd_char is "d":
 		if equiped_weapons:
+			print_without_enter(COLORS.GREEN)
 			print(_("All weapon was disarmed."))
+			print_without_enter(COLORS.ENDC)
 			Party.unequip_all()
 			return CLEAR_ALL
 	else:
@@ -157,7 +161,9 @@ def choose_weapon():
 		
 	
 def print_victory(story_id=0):
-	print(LEVEL_UP_MSG)
+	print_hugebar()
+	print(_(LEVEL_UP_MSG))
+	print(_(NEWITEM_MSG))
 	
 def print_main_menu():
 	print("{:<15} {:<15} {:<15}".format("", "[E]:" + _("NEXT"), "[I]:" + _("INVENTORY")))

@@ -9,6 +9,10 @@ def print_bar(s=""):
 	print(s.center(80, "-"))
 
 
+def print_without_enter(s=""):
+	print(s, end="")
+
+
 def translate(key):
 	if key in gamedb.STR_ZH and gamedb.LANG_ZH:
 		return gamedb.STR_ZH[key]

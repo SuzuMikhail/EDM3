@@ -67,10 +67,6 @@ def reset():
 	status.clear()
 	skills.clear()
 
-
-def print_without_enter(s=""):
-	print(s, end="")
-
 def attack(target, hp):
 	target.hp_change(-hp)
 	return True
