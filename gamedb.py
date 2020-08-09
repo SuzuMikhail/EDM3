@@ -2,7 +2,6 @@
 
 import random
 import common
-
 import os
 
 class COLORS:
@@ -253,6 +252,11 @@ class Party:
 		equiped_weapons.clear()
 		
 	@staticmethod
+	def equiped_weapons_len():
+		i = len(equiped_weapons)
+		return i
+
+	@staticmethod
 	def is_equiped():
 		if equiped_weapons:
 			return True
@@ -308,6 +312,10 @@ STR_ZH = {
 	"MP COST": "消耗",
 	
 	"COMMAND?(LOW CASE)>": "指令？（小写）>",
+	"INVENTORY COMMAND?(LOW CASE)>": "仓库指令？（小写）>",
+	"[NUMBERS]: Equip, [D]: Disarm all, [0]: Exit": "[数字]: 装备, [D]: 解除所有装备, [0]: 退出",
+	"No weapon equiped, weapon was equiped automatically.": "无武器被装备，已自动装备武器。",
+	
 	"NEXT": "下一步",
 	"INVENTORY": "仓库",
 	"FIRE": "开火",
