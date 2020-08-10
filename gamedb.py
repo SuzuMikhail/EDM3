@@ -275,6 +275,8 @@ STR_ZH = {
 	"7.62 Gatling": "轻型加特林机枪",
 	"RPG Classic": "经典火箭推进榴弹",
 	"20x102 Vulcan": "火神式加特林机炮",
+	"Wired Missile": "线导式反坦克导弹",
+	"20x102mm CIWS": "20mm 近迫防御系统",
 	
 	"You": "你",
 	"New world godness": "新世界女神",
@@ -380,18 +382,22 @@ WEAPONS = [
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
 	["RPG Classic",    "",  2000,   1,   15, 60, -25],
 	["20x102 Vulcan", "" ,    60, 30, 3500,  50, -45], # boss 3 used
+	["Wired Missile", "",   3800,  1,  10,  50,  -50], # boss 4 used
+	["20x102mm CIWS", "",    60,  60, 6000,  50, -20],
 ]
 
 HERO = [
 	3000,
 	6000,
 	9000,
+	12000,
 ]
 
 BOSSES = [
 	["New world godness", 9000, 95, 25],
 	["Happy virus maker", 15000, 85, 15],
 	["VR Dominator",     9500, 95, 0],
+	["Magical emperor", 20000, 80,  20],
 ]
 
 COVERS = [

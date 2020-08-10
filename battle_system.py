@@ -61,6 +61,10 @@ def init(story_id):
 		battlers[1].add_skill(skills[4])
 	elif story_id == 3:
 		battlers[1].equip_weapon(weapons[7])
+	elif story_id == 4:
+		battlers[1].equip_weapon(weapons[8])
+		battlers[1].equip_weapon(weapons[9])
+		
 
 		
 	ready_for_next_fire = False
@@ -413,7 +417,6 @@ def check_cover(battler):
 def remove_status(battler, id):
 	battler.remove_hit_bouns()
 	battler.remove_evade_bouns()
-	battler.is_movable = True
 	battler.remove_status(id)
 		
 		
@@ -426,6 +429,7 @@ def check_status():
 		for id, j in enumerate(i.status):
 			if j.is_dead():
 				remove_status(i, id)
+				battler.is_movable = True
 			else:
 				hp_change = int(i.maxhp * (j.hp_change_percent / 100))
 				i.hp_change(hp_change)
