@@ -48,7 +48,7 @@ def init(story_id):
 			
 	skills[0].hp_cost = int(battlers[0].hp * 0.03)
 	skills[1].hp_cost = -int(battlers[0].hp / 5)
-	skills[2].hp_cost = int(battlers[0].hp * 0.04)
+	skills[2].hp_cost = int(battlers[0].hp * 0.02)
 	skills[3].hp_cost = -int(battlers[0].hp / 3)
 	
 	for i in range(0, 4):
@@ -72,7 +72,9 @@ def init(story_id):
 	elif story_id == 5:
 		battlers[1].equip_weapon(weapons[11])
 		battlers[1].equip_weapon(weapons[10])
-		
+	elif story_id == 6:
+		battlers[1].equip_weapon(weapons[13])
+		battlers[1].equip_weapon(weapons[12])
 		
 
 		
@@ -111,6 +113,7 @@ def get_target_final_evade_percent(target):
 def attack_in_turn(attacker, target):
 	total_damage = 0
 	total_hit = 0
+	cover_damage = 0
 	
 	wp = attacker.get_current_weapon()
 	rps = wp.rps
@@ -143,9 +146,11 @@ def attack_in_turn(attacker, target):
 							total_hit += 1
 							total_damage += dmg
 					else:
+						cover_damage += dmg
 						print_without_enter(COLORS.CYAN)
 						print(_("EVAD"), end=" ")
 				else:
+					cover_damage += dmg
 					print_without_enter(COLORS.BLUE)
 					print(_("MISS"), end=" ")
 					
@@ -167,10 +172,11 @@ def attack_in_turn(attacker, target):
 			wait_and_flush(1 / rps)
 			
 			
-	return total_hit, total_damage
+	return total_hit, total_damage, cover_damage
 
-def show_damage(hit, dmg):
+def show_damage(hit, dmg, cover_dmg):
 	print("")
+	print(_("(Cover: %s damage)") % cover_dmg)
 	print(_("(%s hit, %s damage)") % (hit, dmg))
 	wait_and_flush()
 	
@@ -280,8 +286,8 @@ def command_perform(cmd_char):
 			print(_(">AMMO OUT<"))
 			return False
 		else:
-			hit, dmg = attack_in_turn(battlers[0], battlers[1])
-			show_damage(hit, dmg)
+			hit, dmg, cover_dmg = attack_in_turn(battlers[0], battlers[1])
+			show_damage(hit, dmg, cover_dmg)
 			return True
 	elif cmd_char is "s":
 		show_covers()
@@ -410,11 +416,22 @@ def enemy_action(story_id):
 			enemy_action.ready_for_next_fire = False
 	elif story_id == 5:
 		if wp.is_magazine_empty():
-			battler_reload(battlers[1])
-			return
+			wp1 = battlers[1].weapons[0]
+			wp2 = battlers[1].weapons[1]
+			if wp1.is_magazine_empty() and wp2.is_magazine_empty():
+				battlers[1].current_weapon_id = 0
+				battler_reload(battlers[1])
+				battlers[1].current_weapon_id = 1
+				battler_reload(battlers[1])
+				return
 		
-	hit, dmg = attack_in_turn(battlers[1], battlers[0])
-	show_damage(hit, dmg)
+			if battlers[1].current_weapon_id == 0:
+				battler_switch_weapon(battlers[1], 1)
+			else:
+				battler_switch_weapon(battlers[1], 0)
+	
+	hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+	show_damage(hit, dmg, cover_dmg)
 	
 enemy_action.ready_for_next_fire = False
 enemy_action.hold_rpg = False

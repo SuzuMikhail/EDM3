@@ -26,7 +26,7 @@ EXIT = 0
 
 
 def story():
-	story_level = 5
+	story_level = 6
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
@@ -44,6 +44,7 @@ def enter_episode(story_id=0):
 		"ep3",
 		"ep4",
 		"ep5",
+		"ep6",
 	]
 	
 	enemy_id = [
@@ -53,6 +54,7 @@ def enter_episode(story_id=0):
 		3,
 		4,
 		5,
+		6,
 	]
 
 	storyfile_suffix = ".txt"
@@ -102,6 +104,8 @@ def set_inventory(story_id=0):
 		set_weapons([0, 1, 2, 3, 4, 5, 6, 7])
 	elif story_id == 5:
 		set_weapons([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+	elif story_id == 6:
+		set_weapons([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
 		
 def set_weapons(weapon_ids):
 	for i in weapon_ids:
@@ -119,6 +123,8 @@ def auto_equip(story_id):
 		weapon_ids = [5, 7, 6, 4]
 	elif story_id == 5:
 		weapon_ids = [9, 8, 7, 6]
+	elif story_id == 6:
+		weapon_ids = [11, 10, 9, 8]
 		
 	for i in weapon_ids:
 		Party.equip_weapon(i)

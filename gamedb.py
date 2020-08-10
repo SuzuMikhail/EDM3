@@ -279,6 +279,9 @@ STR_ZH = {
 	"Wired Missile": "线导式反坦克导弹",
 	"20x102mm CIWS": "20mm 近迫防御系统",
 	"105mm Cannon": "105mm 重型加农炮",
+	"30x165mm CIWS": "30mm 近迫防御系统",
+	"Stone Missile": "岩石式短程导弹",
+	"Magical Rifle": "魔法轻型突击步枪",
 	
 	"You": "你",
 	"New world godness": "新世界女神",
@@ -286,6 +289,7 @@ STR_ZH = {
 	"VR Dominator": "ＶＲ支配者",
 	"Magical emperor": "魔法之霸王",
 	"Magical Berserker": "魔法狂战士",
+	"Übermensch": "超人约伯满取",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -394,6 +398,8 @@ WEAPONS = [
 	["20x102mm CIWS", "",    60,  55, 6000,  50, -20],
 	["105mm Cannon", "",    4300,  1,  3,   5,  -23], # boss 5 used
 	["30x165mm CIWS", "",   100,  60, 8000,  30, -20],
+	["Stone Missile",  "",  7000,  1,  1,   0,  -20], # boss 6 used
+	["Magical Rifle",  "",    700,  10,  80,  8,  5],
 ]
 
 HERO = [
@@ -402,6 +408,7 @@ HERO = [
 	9000,
 	14000,
 	18000,
+	24000,
 ]
 
 BOSSES = [
@@ -410,6 +417,7 @@ BOSSES = [
 	["VR Dominator",     9500, 95, 0],
 	["Magical emperor", 16000, 70,  20],
 	["Magical Berserker", 30000, 70, 25],
+	["Übermensch",      40000,  80,  20],
 ]
 
 COVERS = [
@@ -427,16 +435,16 @@ COVERS_2 = [
 ]
 
 SKILLS = [
-	["FIRE CURSE",      "Burn enemy and keep them burning",        80,   0,  15],
+	["FIRE CURSE",      "Burn enemy and keep them burning",  80,   0,  15],
 	["ICE POWER", "Heal yourself",                            0, None, 15],
-	["BOLT",       "Shock enemy and make them can not move", 100,  1,  23],
+	["BOLT",       "Shock enemy and make them can not move", 40,  1,  10],
 	["HEAL",      "Heal yourself",                           0, None, 30],
 	["CHMICAL FIRE", "",                                      0,   4,  20]
 ]
 
 STATUS = [
 	["BURN",      5,  -5, -5,   True, -3],
-	["SHOCK",     5, -25, -25, False, -1],
+	["SHOCK",     5, -25, -25,  True, -1],
     ["HEALING",   5,   0, 0,    True, 100],
     ["HEALING+", 150,  0, 0,    True, 0.5],
 	["C.BURN",    20,  -30, -30, True, -6],
