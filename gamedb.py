@@ -38,10 +38,11 @@ class Battler:
 		
 	def hp_change(self, hp):
 		added_hp = self.hp + hp
-		if added_hp > self.maxhp:
+		if added_hp >= self.maxhp:
 			self.hp = self.maxhp
 			return
 		self.hp += hp
+		return
 		
 	def get_current_weapon(self):
 		wp = self.weapons[self.current_weapon_id]
@@ -277,12 +278,14 @@ STR_ZH = {
 	"20x102 Vulcan": "火神式加特林机炮",
 	"Wired Missile": "线导式反坦克导弹",
 	"20x102mm CIWS": "20mm 近迫防御系统",
+	"105mm Cannon": "105mm 重型加农炮",
 	
 	"You": "你",
 	"New world godness": "新世界女神",
 	"Happy virus maker": "乐流感大师",
 	"VR Dominator": "ＶＲ支配者",
 	"Magical emperor": "魔法之霸王",
+	"Magical Berserker": "魔法狂战士",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -387,8 +390,10 @@ WEAPONS = [
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
 	["RPG Classic",    "",  3000,   1,   15, 5, -25],
 	["20x102 Vulcan", "" ,    60, 30, 3500,  50, -45], # boss 3 used
-	["Wired Missile", "",   3800,  1,  10,  5,  -20], # boss 4 used
-	["20x102mm CIWS", "",    60,  60, 6000,  50, -20],
+	["Wired Missile", "",   3500,  1,  1,  5,  -25], # boss 4 used
+	["20x102mm CIWS", "",    60,  55, 6000,  50, -20],
+	["105mm Cannon", "",    4300,  1,  3,   5,  -23], # boss 5 used
+	["30x165mm CIWS", "",   100,  60, 8000,  30, -20],
 ]
 
 HERO = [
@@ -396,13 +401,15 @@ HERO = [
 	6000,
 	9000,
 	14000,
+	18000,
 ]
 
 BOSSES = [
 	["New world godness", 9000, 95, 25],
 	["Happy virus maker", 15000, 85, 15],
 	["VR Dominator",     9500, 95, 0],
-	["Magical emperor", 20000, 80,  20],
+	["Magical emperor", 16000, 70,  20],
+	["Magical Berserker", 30000, 70, 25],
 ]
 
 COVERS = [
@@ -414,8 +421,8 @@ COVERS = [
 ]
 
 COVERS_2 = [
-	["City", 30000, -35, 35, False],
-	["Mountain", 40000, -20, 20, False],
+	["City", 60000, -60, 60, False],
+	["Mountain", 80000, -30, 30, False],
 	["Sun",     99999, 40, -20, True],
 ]
 
@@ -434,7 +441,7 @@ STATUS = [
     ["HEALING+", 150,  0, 0,    True, 0.5],
 	["C.BURN",    20,  -30, -30, True, -6],
 	["HACKING",   5, 150, 150,   True, 18],
-	["WANTED",  150,  -10, -10,  True, -3],
+	["WANTED",  150,  -10, -10,  True, -2],
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"

@@ -69,6 +69,9 @@ def init(story_id):
 		battlers[1].equip_weapon(weapons[9])
 		battlers[1].equip_weapon(weapons[8])
 		battlers[0].add_status(status[6])
+	elif story_id == 5:
+		battlers[1].equip_weapon(weapons[11])
+		battlers[1].equip_weapon(weapons[10])
 		
 		
 
@@ -405,6 +408,10 @@ def enemy_action(story_id):
 					return
 		else:
 			enemy_action.ready_for_next_fire = False
+	elif story_id == 5:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
 		
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
