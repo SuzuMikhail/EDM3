@@ -282,6 +282,7 @@ STR_ZH = {
 	"New world godness": "新世界女神",
 	"Happy virus maker": "乐流感大师",
 	"VR Dominator": "ＶＲ支配者",
+	"Magical emperor": "魔法之霸王",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -382,7 +383,7 @@ WEAPONS = [
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
 	["RPG Classic",    "",  2000,   1,   15, 60, -25],
 	["20x102 Vulcan", "" ,    60, 30, 3500,  50, -45], # boss 3 used
-	["Wired Missile", "",   3800,  1,  10,  50,  -50], # boss 4 used
+	["Wired Missile", "",   3800,  1,  10,  50,  -20], # boss 4 used
 	["20x102mm CIWS", "",    60,  60, 6000,  50, -20],
 ]
 

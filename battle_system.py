@@ -62,8 +62,9 @@ def init(story_id):
 	elif story_id == 3:
 		battlers[1].equip_weapon(weapons[7])
 	elif story_id == 4:
-		battlers[1].equip_weapon(weapons[8])
 		battlers[1].equip_weapon(weapons[9])
+		battlers[1].equip_weapon(weapons[8])
+		
 		
 
 		
@@ -372,6 +373,10 @@ def enemy_action(story_id):
 				battlers[1].add_status(status[5])
 				enemy_action.hacking = True
 				return
+	elif story_id == 4:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
 		
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
@@ -429,7 +434,7 @@ def check_status():
 		for id, j in enumerate(i.status):
 			if j.is_dead():
 				remove_status(i, id)
-				battler.is_movable = True
+				i.is_movable = True
 			else:
 				hp_change = int(i.maxhp * (j.hp_change_percent / 100))
 				i.hp_change(hp_change)
