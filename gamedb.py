@@ -282,6 +282,8 @@ STR_ZH = {
 	"30x165mm CIWS": "30mm 近迫防御系统",
 	"Stone Missile": "岩石式短程导弹",
 	"Magical Rifle": "魔法轻型突击步枪",
+	"Magic Storm":   "魔法武器疾风暴雨",
+	"Jupiter Missile":  "诸神之王中程导弹",
 	
 	"You": "你",
 	"New world godness": "新世界女神",
@@ -289,7 +291,8 @@ STR_ZH = {
 	"VR Dominator": "ＶＲ支配者",
 	"Magical emperor": "魔法之霸王",
 	"Magical Berserker": "魔法狂战士",
-	"Übermensch": "超人约伯满取",
+	"Ubermensch": "超人约伯满取",
+	"United souls": "统一的人类灵魂",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -400,6 +403,8 @@ WEAPONS = [
 	["30x165mm CIWS", "",   100,  60, 8000,  30, -20],
 	["Stone Missile",  "",  7000,  1,  1,   0,  -20], # boss 6 used
 	["Magical Rifle",  "",    700,  10,  80,  8,  5],
+	["Magic Storm",   "",    300,  30,  500,  2,  10], # boss 7 used
+	["Jupiter Missile",  "",   10000,  1,  1,   0,   -10]
 ]
 
 HERO = [
@@ -409,6 +414,7 @@ HERO = [
 	14000,
 	18000,
 	24000,
+	32000,
 ]
 
 BOSSES = [
@@ -417,7 +423,8 @@ BOSSES = [
 	["VR Dominator",     9500, 95, 0],
 	["Magical emperor", 16000, 70,  20],
 	["Magical Berserker", 30000, 70, 25],
-	["Übermensch",      40000,  80,  20],
+	["Ubermensch",      40000,  80,  20],
+	["United souls",    60000,  90, 0],
 ]
 
 COVERS = [

@@ -75,6 +75,9 @@ def init(story_id):
 	elif story_id == 6:
 		battlers[1].equip_weapon(weapons[13])
 		battlers[1].equip_weapon(weapons[12])
+	elif story_id == 7:
+		battlers[1].equip_weapon(weapons[14])
+		battlers[1].equip_weapon(weapons[15])
 		
 
 		
