@@ -21,8 +21,12 @@ def init(story_id):
 		weapons.append(Weapon(_(i[0]), i[1], i[2], i[3], i[4], i[5], i[6]))
 		
 	global covers
-	for i in COVERS:
-		covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
+	if story_id >= 4: 
+		for i in COVERS_2:
+			covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
+	else:
+		for i in COVERS:
+			covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
 
 	global status
 	for i in STATUS:
@@ -64,6 +68,7 @@ def init(story_id):
 	elif story_id == 4:
 		battlers[1].equip_weapon(weapons[9])
 		battlers[1].equip_weapon(weapons[8])
+		battlers[0].add_status(status[6])
 		
 		
 
@@ -377,6 +382,29 @@ def enemy_action(story_id):
 		if wp.is_magazine_empty():
 			battler_reload(battlers[1])
 			return
+			
+		if not enemy_action.ready_for_next_fire:
+			if wp.is_magazine_empty():
+				battler_reload(battlers[1])
+				return
+				
+			if battlers[0].is_covered():
+				if battlers[1].current_weapon_id == 1: # if hold RPG
+					hit, dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg)
+					return
+					
+				battler_switch_weapon(battlers[1], 1)
+				enemy_action.ready_for_next_fire = True
+				enemy_action.hold_rpg = True
+				return
+			else:
+				if enemy_action.hold_rpg:
+					battler_switch_weapon(battlers[1], 0)
+					enemy_action.hold_rpg = False
+					return
+		else:
+			enemy_action.ready_for_next_fire = False
 		
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
@@ -426,7 +454,7 @@ def remove_status(battler, id):
 		
 		
 def check_status():
-	for i in battlers:
+	for k, i in enumerate(battlers):
 		if not i.status:
 			continue
 		
@@ -438,8 +466,12 @@ def check_status():
 			else:
 				hp_change = int(i.maxhp * (j.hp_change_percent / 100))
 				i.hp_change(hp_change)
-				i.add_hit_bouns(j.hit_bouns)
-				i.add_evade_bouns(j.evade_bouns)
+				
+				if not check_status.bouns_added[k]:
+					i.add_hit_bouns(j.hit_bouns)
+					i.add_evade_bouns(j.evade_bouns)
+					check_status.bouns_added[k] = True
+				
 				if j.name != status[1].name:
 					i.is_movable = j.is_movable
 				
@@ -448,7 +480,7 @@ def check_status():
 			j.reduce_keep_turn()
 			wait_and_flush()
 	
-	
+check_status.bouns_added = [False, False]
 			
 		
 def update_skill_cooldown():

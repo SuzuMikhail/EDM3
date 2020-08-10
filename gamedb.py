@@ -290,6 +290,9 @@ STR_ZH = {
 	"Sun": "太阳",
 	"Sea": "大海",
 	
+	"City": "城市",
+	"Mountain": "山脉",
+	
 	"NAME": "名称",
 	"DMG": "伤害",
 	"RPS": "射速",
@@ -355,6 +358,7 @@ STR_ZH = {
 	"SHOCK": "触电",
 	"C.BURN": "化学燃烧",
 	"HACKING": "开挂",
+	"WANTED": "全球通缉",
 	
 	"[SHOCKED]": "触电",
 	
@@ -381,9 +385,9 @@ WEAPONS = [
 	["12.7x108mm HMG", "",    48, 7, 100, 35, -35],
 	["7.62 Gatling",   "",    22, 45, 800, 2,  -38], # boss 2 used
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
-	["RPG Classic",    "",  2000,   1,   15, 60, -25],
+	["RPG Classic",    "",  3000,   1,   15, 5, -25],
 	["20x102 Vulcan", "" ,    60, 30, 3500,  50, -45], # boss 3 used
-	["Wired Missile", "",   3800,  1,  10,  50,  -20], # boss 4 used
+	["Wired Missile", "",   3800,  1,  10,  5,  -20], # boss 4 used
 	["20x102mm CIWS", "",    60,  60, 6000,  50, -20],
 ]
 
@@ -391,7 +395,7 @@ HERO = [
 	3000,
 	6000,
 	9000,
-	12000,
+	14000,
 ]
 
 BOSSES = [
@@ -409,6 +413,12 @@ COVERS = [
 	["Sea",    999999, -100, -100, False]
 ]
 
+COVERS_2 = [
+	["City", 30000, -35, 35, False],
+	["Mountain", 40000, -20, 20, False],
+	["Sun",     99999, 40, -20, True],
+]
+
 SKILLS = [
 	["FIRE CURSE",      "Burn enemy and keep them burning",        80,   0,  15],
 	["ICE POWER", "Heal yourself",                            0, None, 15],
@@ -424,6 +434,7 @@ STATUS = [
     ["HEALING+", 150,  0, 0,    True, 0.5],
 	["C.BURN",    20,  -30, -30, True, -6],
 	["HACKING",   5, 150, 150,   True, 18],
+	["WANTED",  150,  -10, -10,  True, -3],
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"
