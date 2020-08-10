@@ -37,8 +37,9 @@ class Battler:
 		return False
 		
 	def hp_change(self, hp):
-		current_hp = self.hp + hp
-		if current_hp > self.maxhp:
+		added_hp = self.hp + hp
+		if added_hp > self.maxhp:
+			self.hp = self.maxhp
 			return
 		self.hp += hp
 		
@@ -271,7 +272,9 @@ STR_ZH = {
 	"12.7x99mm HMG":   "12.7美式重机枪",
 	"12.7x108mm HMG": "12.7苏式重机枪",
 	"Storm Generator": "风卷残云轻机枪",
-	"RPG Classic": "经典 RPG",
+	"7.62 Gatling": "轻型加特林机枪",
+	"RPG Classic": "经典火箭推进榴弹",
+	"20x102 Vulcan": "火神式加特林机炮",
 	
 	"You": "你",
 	"New world godness": "新世界女神",
@@ -298,6 +301,7 @@ STR_ZH = {
 	"Switch weapon": "切换武器",
 	
 	"(%s hit, %s damage)": "（命中 %s 次, 造成 %s 点伤害）",
+	"MP CHANGED: %s": "魔力变化了: %s",
 	
 	"EVAD": "回避",
 	"MISS": "失误",
@@ -319,6 +323,7 @@ STR_ZH = {
 	"INVENTORY COMMAND?(LOW CASE)>": "仓库指令？（小写）>",
 	"[NUMBERS]: Equip, [D]: Disarm all, [0]: Exit": "[数字]: 装备, [D]: 解除所有装备, [0]: 退出",
 	"[No weapon equiped, weapon was equiped automatically.]": "[无武器被装备，已自动装备武器。]",
+	"Equiped %s": "装备了 %s",
 	
 	"NEXT": "下一步",
 	"INVENTORY": "仓库",
@@ -346,6 +351,7 @@ STR_ZH = {
 	"BURN": "燃烧",
 	"SHOCK": "触电",
 	"C.BURN": "化学燃烧",
+	"HACKING": "开挂",
 	
 	"[SHOCKED]": "触电",
 	
@@ -361,6 +367,8 @@ STR_ZH = {
 	
 	"LEVEL UP!": "等级提升！",
 	"New items are in your inventory.": "新的道具已经收进了你的仓库。",
+	
+	"I have turn on my cheat program!": "傻了吧，爷会开挂！",
 }
 		
 WEAPONS = [
@@ -371,6 +379,7 @@ WEAPONS = [
 	["7.62 Gatling",   "",    22, 45, 800, 2,  -38], # boss 2 used
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
 	["RPG Classic",    "",  2000,   1,   15, 60, -25],
+	["20x102 Vulcan", "" ,    60, 30, 3500,  50, -45], # boss 3 used
 ]
 
 HERO = [
@@ -382,13 +391,13 @@ HERO = [
 BOSSES = [
 	["New world godness", 9000, 95, 25],
 	["Happy virus maker", 15000, 85, 15],
-	["VR Dominator",     23000, 200, 5],
+	["VR Dominator",     9500, 95, 0],
 ]
 
 COVERS = [
-	["Forest", 10000, -50, 70, False],
+	["Forest", 15000, -50, 70, False],
 	["Street", 20000, -40, 50, False],
-	["Building", 10000, 0, 20, False],
+	["Building", 25000, 0, 20, False],
 	["Sun",     99999, 40, -20, True],
 	["Sea",    999999, -100, -100, False]
 ]
@@ -406,7 +415,8 @@ STATUS = [
 	["SHOCK",     5, -25, -25, False, -1],
     ["HEALING",   5,   0, 0,    True, 100],
     ["HEALING+", 150,  0, 0,    True, 0.5],
-	["C.BURN",    20,  -30, -30, True, -6]
+	["C.BURN",    20,  -30, -30, True, -6],
+	["HACKING",   5, 150, 150,   True, 18],
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"

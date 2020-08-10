@@ -37,7 +37,7 @@ def init(story_id):
 		
 	global skills
 	for i in SKILLS:
-		if i[3] or i[3] == 0:
+		if i[3] or i[3] == 0: #if status is none
 			skills.append(Skill(_(i[0]), i[1], i[2], status[i[3]], i[4]))
 		else:
 			skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
@@ -59,10 +59,13 @@ def init(story_id):
 		battlers[1].equip_weapon(weapons[6])
 		skills[4].hp_cost = int(battlers[1].hp * 0.05)
 		battlers[1].add_skill(skills[4])
+	elif story_id == 3:
+		battlers[1].equip_weapon(weapons[7])
 
 		
 	ready_for_next_fire = False
 	player_lastturn_is_covered = False
+	#enemy_action.hacking = False
 	
 def reset():
 	weapons.clear()
@@ -249,6 +252,7 @@ def use_skill(attacker, target, id):
 	
 	print_bar("SKILL")
 	print_without_enter(COLORS.YELLOW)
+	print(_("MP CHANGED: %s") % -s.hp_cost)
 	print("%s" % s.name)
 	print_without_enter(COLORS.ENDC)
 	return True
@@ -353,12 +357,24 @@ def enemy_action(story_id):
 					return
 		else:
 			enemy_action.ready_for_next_fire = False
-	
+	elif story_id == 3:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+		
+		if not enemy_action.hacking:
+			if battlers[1].hp <= int(battlers[1].maxhp / 3):
+				print(_("I have turn on my cheat program!"))
+				battlers[1].add_status(status[5])
+				enemy_action.hacking = True
+				return
+		
 	hit, dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg)
 	
 enemy_action.ready_for_next_fire = False
 enemy_action.hold_rpg = False
+enemy_action.hacking = False
 	
 	
 def is_win(battlers):
@@ -411,7 +427,7 @@ def check_status():
 			if j.is_dead():
 				remove_status(i, id)
 			else:
-				hp_change = int(i.hp * (j.hp_change_percent / 100))
+				hp_change = int(i.maxhp * (j.hp_change_percent / 100))
 				i.hp_change(hp_change)
 				i.add_hit_bouns(j.hit_bouns)
 				i.add_evade_bouns(j.evade_bouns)

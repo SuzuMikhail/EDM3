@@ -6,6 +6,7 @@ from gamedb import COLORS
 from gamedb import Weapon
 from gamedb import WEAPONS
 from gamedb import LEVEL_UP_MSG
+from gamedb import NEWITEM_MSG
 from gamedb import Party
 from gamedb import party_weapons
 from gamedb import equiped_weapons
@@ -25,7 +26,7 @@ EXIT = 0
 
 
 def story():
-	story_level = 2
+	story_level = 3
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
@@ -40,12 +41,14 @@ def enter_episode(story_id=0):
 		"ep0",
 		"ep1",
 		"ep2",
+		"ep3",
 	]
 	
 	enemy_id = [
 		0,
 		1,
 		2,
+		3,
 	]
 
 	storyfile_suffix = ".txt"
@@ -115,7 +118,7 @@ def equip_wp(id):
 		return True
 	else:
 		print_without_enter(COLORS.RED)
-		print("[SLOT IS FULL]")
+		print(_("[SLOT IS FULL]"))
 		print_without_enter(COLORS.ENDC)
 		return False
 		
@@ -155,14 +158,14 @@ def choose_weapon():
 				#print("ID ", id)
 				if id in party_weapons:
 					if equip_wp(id):
-						print("Equiped %s" % _(WEAPONS[id][0]))
+						print(_("Equiped %s") % _(WEAPONS[id][0]))
 					print_equiped_weapons()
 					return EQUIPED
 				else:
 					print("NOT EQUIPED")
 					return NOT_EQUIPED
 		except ValueError:
-			print("PLEASE INPUT LEGAL COMMAND")
+			print(_("PLEASE INPUT LEGAL COMMAND"))
 			return NOT_EQUIPED
 			
 		
