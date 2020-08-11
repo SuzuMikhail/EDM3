@@ -398,7 +398,7 @@ STR_ZH = {
 	"New items are in your inventory.": "新的道具已经收进了你的仓库。",
 	
 	"I have turn on my cheat program!": "傻了吧，爷会开挂！",
-	"(BERSERK EFFECT: MP + %s, DAMAGE + %s)": "（狂战效果： 自身魔力 + %s, 造成伤害 + %s）",
+	"(BERSERK EFFECT: MP + %s, DAMAGE + %s)": "（狂战效果： 自身魔力恢复 %s, 造成伤害增加 %s）",
 }
 		
 WEAPONS = [
@@ -419,20 +419,20 @@ WEAPONS = [
 	["105mm Cannon", "",    4300,  1,  3,   5,  -23], # boss 5 used
 	["30x165mm CIWS", "",   100,  50, 8000,  30, -20],
 	
-	["Stone Missile",  "",  7000,  1,  1,   0,  -20], # boss 6 used
+	["Stone Missile",  "",  7000,  1,  1,   0,  -25], # boss 6 used
 	["Magical Rifle",  "",    700,  10,  80,  8,  5],
 	
 	["Magic Storm",   "",    300,  30,  500,  2,  10], # boss 7 used
-	["Jupiter Missile",  "",   10000,  1,  1,   0,   -10],
+	["Jupiter Missile",  "",   10000,  1,  1,   0,   -25],
 	
 	["Antimatter RFL",  "",   1000, 10,  100,  10,   10], # boss 8
-	["Thor Missile",  "",    20000,  1,   1,   0,   -10],
+	["Thor Missile",  "",    20000,  1,   1,   0,   -25],
 	
 	["Antimatter LMG",  "",   1000,  25,  400,  10,  7], # boss 9
-	["Minute Missile",  "",  40000,  1,   1,   0,   -10],
+	["Minute Missile",  "",  40000,  1,   1,   0,   -25],
 	
 	["Antimatter RAIN", "",   1000,  50,  1000,  0,   0], # boss 10
-	["Meteor Missile",  "",  60000,  1,   1,   0,     0]
+	["Meteor Missile",  "",  60000,  1,   1,   0,     -25]
 ]
 
 HERO = [

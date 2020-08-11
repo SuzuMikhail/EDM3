@@ -161,22 +161,27 @@ def attack_in_turn(attacker, target):
 	
 				if get_rate() <= attacker_hit_percent:
 					if get_rate() >= target_evade_percent:
+						if is_berserk_status(attacker, target):
+							increased_damage = int((dmg * 0.01) * total_hit)
+							
+							dmg += increased_damage
+							healed_hp = int((dmg * 0.01) * total_hit)
+							
+							total_increased_damage += increased_damage
+							total_healed_hp += healed_hp
+							
+							attacker.hp_change(healed_hp) # berserk
+						
+						
+						total_hit += 1
+						total_damage += dmg
+						
+						
 						if get_rate() <= critical_percent:
 							dmg *= int(Weapon.CRITICAL_BONUS_PERCENT / 100)
 							print_without_enter(COLORS.YELLOW)
 							
 						print("{:>4} ".format(dmg), end="")
-						
-						healed_hp, increased_damage = berserk_status(attacker, target, dmg)
-						dmg += dmg + increased_damage
-						
-						total_hit += 1
-						total_damage += dmg
-						total_healed_hp += healed_hp
-						total_increased_damage += increased_damage
-						
-						attacker.hp_change(healed_hp) # berserk
-						
 						attack(target, dmg)
 					else:
 						cover_damage += dmg
@@ -535,18 +540,16 @@ def remove_status(battler, id):
 	battler.remove_evade_bouns()
 	battler.remove_status(id)
 		
-def berserk_status(attacker, target, orig_dmg):
+def is_berserk_status(attacker, target):
 	#pdb.set_trace()
 	if not attacker.status:
-		return 0, 0
+		return False
 	
 	for i in attacker.status:
 		if i.name == status[7].name:
-			healed_hp = int(orig_dmg * 0.1)
-			increase_damage = int(orig_dmg * 0.2)
-			return healed_hp, increase_damage
-	
-	return 0, 0
+			return True
+			
+	return False
 			
 def print_berserk_effect(attacker, target, healed_hp, increased_damage):
 	if not attacker.status:
