@@ -30,7 +30,10 @@ def init(story_id):
 		weapons.append(Weapon(_(i[0]), i[1], i[2], i[3], i[4], i[5], i[6]))
 		
 	global covers
-	if story_id >= 4: 
+	if story_id >= 9:
+		for i in COVERS_3:
+			covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
+	elif story_id >= 4: 
 		for i in COVERS_2:
 			covers.append(Cover(_(i[0]), i[1], i[2], i[3], i[4]))
 	else:
@@ -129,6 +132,12 @@ def init(story_id):
 		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[18])
 		battlers[1].equip_weapon(weapons[19])
+		
+		battlers[1].add_skill(enemy_skills[3])
+		battlers[1].add_skill(enemy_skills[1])
+		battlers[1].skills[0].hp_cost = -int(battlers[1].hp / 3)
+		battlers[1].skills[1].hp_cost = -int(battlers[1].hp / 5)
+		battlers[1].add_status(status[9])
 	elif story_id == 10:
 		battlers[0].add_status(status[2])
 		battlers[0].add_status(status[7])
@@ -207,15 +216,14 @@ def attack_in_turn(attacker, target):
 							total_healed_hp += healed_hp
 							
 							attacker.hp_change(healed_hp) # berserk
-						
-						
-						total_hit += 1
-						total_damage += dmg
-						
-						
+
 						if get_rate() <= critical_percent:
 							dmg *= int(Weapon.CRITICAL_BONUS_PERCENT / 100)
 							print_without_enter(COLORS.YELLOW)
+							
+						total_hit += 1
+						total_damage += dmg
+						
 							
 						print("{:>4} ".format(dmg), end="")
 						attack(target, dmg)
@@ -632,9 +640,40 @@ def enemy_action(story_id):
 			
 			
 	elif story_id == 9:
+		if battlers[1].hp <= (battlers[1].maxhp * 0.33):
+			if use_skill(battlers[1], battlers[0], 0):
+				return
+		if battlers[1].hp <= (battlers[1].maxhp * 0.5):
+			if use_skill(battlers[1], battlers[0], 1):
+				return
+	
 		if wp.is_magazine_empty():
 			battler_reload(battlers[1])
 			return
+			
+		if not enemy_action.ready_for_next_fire:
+			if wp.is_magazine_empty():
+				battler_reload(battlers[1])
+				return			
+				
+			if battlers[0].is_covered():
+				if battlers[1].current_weapon_id == 1: # if hold RPG
+					hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg, cover_dmg)
+					return
+				
+					
+				battler_switch_weapon(battlers[1], 1)
+				enemy_action.ready_for_next_fire = True
+				enemy_action.hold_rpg = True
+				return
+			else:
+				if enemy_action.hold_rpg:
+					battler_switch_weapon(battlers[1], 0)
+					enemy_action.hold_rpg = False
+					return
+		else:
+			enemy_action.ready_for_next_fire = False
 			
 	elif story_id == 10:
 		if wp.is_magazine_empty():

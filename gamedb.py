@@ -290,6 +290,7 @@ STR_ZH = {
 	"Minute Missile": "一分钟式洲际导弹",
 	"Antimatter RAIN": "反物质暴雨狂潮",
 	"Meteor Missile":  "小型流星星际导弹",
+	"Magic Shotgun":  "小型魔法霰弹枪",
 	
 	
 	"10th magical girl": "第十位魔法少女",
@@ -312,6 +313,10 @@ STR_ZH = {
 	
 	"City": "城市",
 	"Mountain": "山脉",
+	
+	"Earth": "地球",
+	"Moon":  "月球",
+	"Mars":  "火星",
 	
 	"NAME": "名称",
 	"DMG": "伤害",
@@ -424,19 +429,21 @@ WEAPONS = [
 	["30x165mm CIWS", "",   100,  50, 8000,  30, -20],
 	
 	["Stone Missile",  "",  10000,  1,  1,   0,  -25], # boss 6 used
-	["Magical Rifle",  "",    700,  10,  80,  8,  5],
+	["Magical Rifle",  "",    700,  10,  140,  8,  5],
 	
 	["Magic Storm",   "",    300,  35,  500,  2,  10], # boss 7 used
 	["Jupiter Missile",  "",   15000,  1,  1,   0,   -25],
 	
-	["Antimatter RFL",  "",    650, 20,  100,  10,   10], # boss 8
+	["Antimatter RFL",  "",    650, 20,  500,  10,   10], # boss 8
 	["Thor Missile",  "",    20000,  1,   1,   0,   -25],
 	
-	["Antimatter LMG",  "",   1000,  25,  400,  10,  7], # boss 9
-	["Minute Missile",  "",  40000,  1,   1,   0,   -25],
+	["Antimatter LMG",  "",    650,  40,  1000,  10,  7], # boss 9
+	["Minute Missile",  "",  30000,  1,   1,   0,   -25],
 	
 	["Antimatter RAIN", "",   1000,  50,  1000,  0,   0], # boss 10
-	["Meteor Missile",  "",  60000,  1,   1,   0,     -25]
+	["Meteor Missile",  "",  20000,  2,   2,   0,     -25],
+	
+	["Magic Shotgun",   "",   300,  90, 5000,  4,   -10],
 ]
 
 HERO = [
@@ -450,8 +457,8 @@ HERO = [
 	
 	32000,
 	48000,
-	50000,
-	65000
+	60000,
+	80000
 ]
 
 BOSSES = [
@@ -465,7 +472,7 @@ BOSSES = [
 	
 	["United souls",    60000,  90, 0],
 	["MAGICA LILIUM",   50000,  90, 20],
-	["The New Lord",   100000,  90, 20],
+	["The New Lord",   120000,  90, 20],
 	["DEA LILIUM",     130000,  90, 10]
 ]
 
@@ -481,6 +488,13 @@ COVERS_2 = [
 	["City", 60000, -60, 60, False],
 	["Mountain", 80000, -30, 30, False],
 	["Sun",     99999, 40, -20, True],
+]
+
+COVERS_3 = [
+	["Earth",  400000, -60, 60, False],
+	["Moon",   200000, -45, 45, False],
+	["Sun",    900000, -90, 90, False],
+	["Mars",   600000, -75, 75, False]
 ]
 
 SKILLS = [

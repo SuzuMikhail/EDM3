@@ -26,7 +26,7 @@ EXIT = 0
 
 
 def story():
-	story_level = 8
+	story_level = 9
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
@@ -120,7 +120,7 @@ def set_inventory(story_id=0):
 	elif story_id == 9:
 		set_weapons([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
 	elif story_id == 10:
-		set_weapons([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+		set_weapons([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22])
 		
 def set_weapons(weapon_ids):
 	for i in weapon_ids:
@@ -147,7 +147,7 @@ def auto_equip(story_id):
 	elif story_id == 9:
 		weapon_ids = [16, 17, 15, 14]
 	elif story_id == 10:
-		weapon_ids = [18, 19, 17, 16]
+		weapon_ids = [22, 18, 19, 17]
 		
 	for i in weapon_ids:
 		Party.equip_weapon(i)
