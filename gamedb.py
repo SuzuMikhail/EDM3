@@ -383,6 +383,7 @@ STR_ZH = {
 	"WANTED": "全球通缉",
 	"BERSERK": "狂战",
 	"CURSED": "诅咒",
+	"YURI": "百合贴贴",
 	
 	"[SHOCKED]": "触电",
 	
@@ -428,7 +429,7 @@ WEAPONS = [
 	["Magic Storm",   "",    300,  35,  500,  2,  10], # boss 7 used
 	["Jupiter Missile",  "",   15000,  1,  1,   0,   -25],
 	
-	["Antimatter RFL",  "",   1000, 10,  100,  10,   10], # boss 8
+	["Antimatter RFL",  "",    650, 20,  100,  10,   10], # boss 8
 	["Thor Missile",  "",    20000,  1,   1,   0,   -25],
 	
 	["Antimatter LMG",  "",   1000,  25,  400,  10,  7], # boss 9
@@ -448,7 +449,7 @@ HERO = [
 	25000,
 	
 	32000,
-	40000,
+	48000,
 	50000,
 	65000
 ]
@@ -463,7 +464,7 @@ BOSSES = [
 	["Ubermensch",      40000,  80,  20],
 	
 	["United souls",    60000,  90, 0],
-	["MAGICA LILIUM",   80000,  90, 20],
+	["MAGICA LILIUM",   50000,  90, 20],
 	["The New Lord",   100000,  90, 20],
 	["DEA LILIUM",     130000,  90, 10]
 ]
@@ -504,7 +505,8 @@ STATUS = [
 	["WANTED",  150,  -10, -10,  True, -2],
 	["BERSERK", 150,  0, 0,     True,   0],
 	
-	["CURSED",   10, -10, -10,  True,  -3],
+	["CURSED",   10, -10, -10,  True,  -5],
+	["YURI",    150,  10,  10,  True,   4],
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"

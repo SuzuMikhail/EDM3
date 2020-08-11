@@ -118,6 +118,12 @@ def init(story_id):
 		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[16])
 		battlers[1].equip_weapon(weapons[17])
+		
+		battlers[1].add_skill(enemy_skills[3])
+		battlers[1].add_skill(enemy_skills[1])
+		battlers[1].skills[0].hp_cost = -int(battlers[1].hp / 3)
+		battlers[1].skills[1].hp_cost = -int(battlers[1].hp / 5)
+		battlers[1].add_status(status[9])
 	elif story_id == 9:
 		battlers[0].add_status(status[2])
 		battlers[0].add_status(status[7])
@@ -213,6 +219,7 @@ def attack_in_turn(attacker, target):
 							
 						print("{:>4} ".format(dmg), end="")
 						attack(target, dmg)
+						dmg = 0
 					else:
 						cover_damage += dmg
 						print_without_enter(COLORS.CYAN)
@@ -588,9 +595,41 @@ def enemy_action(story_id):
 			enemy_action.ready_for_next_fire = False
 			
 	elif story_id == 8:
+		if battlers[1].hp <= (battlers[1].maxhp * 0.33):
+			if use_skill(battlers[1], battlers[0], 0):
+				return
+		if battlers[1].hp <= (battlers[1].maxhp * 0.5):
+			if use_skill(battlers[1], battlers[0], 1):
+				return
+	
 		if wp.is_magazine_empty():
 			battler_reload(battlers[1])
 			return
+			
+		if not enemy_action.ready_for_next_fire:
+			if wp.is_magazine_empty():
+				battler_reload(battlers[1])
+				return			
+				
+			if battlers[0].is_covered():
+				if battlers[1].current_weapon_id == 1: # if hold RPG
+					hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg, cover_dmg)
+					return
+				
+					
+				battler_switch_weapon(battlers[1], 1)
+				enemy_action.ready_for_next_fire = True
+				enemy_action.hold_rpg = True
+				return
+			else:
+				if enemy_action.hold_rpg:
+					battler_switch_weapon(battlers[1], 0)
+					enemy_action.hold_rpg = False
+					return
+		else:
+			enemy_action.ready_for_next_fire = False
+			
 			
 	elif story_id == 9:
 		if wp.is_magazine_empty():
@@ -650,7 +689,6 @@ def remove_status(battler, id):
 	battler.remove_status(id)
 		
 def is_berserk_status(attacker, target):
-	#pdb.set_trace()
 	if not attacker.status:
 		return False
 	
@@ -666,6 +704,7 @@ def print_berserk_effect(attacker, target, healed_hp, increased_damage):
 
 	for i in attacker.status:
 		if i.name == status[7].name:
+			print("")
 			print(_("(BERSERK EFFECT: MP + %s, DAMAGE + %s)") % (healed_hp, increased_damage))
 			
 def check_status():
@@ -715,7 +754,7 @@ def print_battlersStatus():
 		elif hp <= int(maxhp / 3):
 			print_without_enter(COLORS.RED)	
 				
-		print("{:<}\t\t {:<}\t / {:<}\t ".format(name, hp, maxhp), end="")
+		print("{:<}\t {:<}\t / {:<}\t ".format(name, hp, maxhp), end="")
 		
 		for i in battlers[i].status:
 			

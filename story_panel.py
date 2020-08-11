@@ -26,7 +26,7 @@ EXIT = 0
 
 
 def story():
-	story_level = 7
+	story_level = 8
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
@@ -143,7 +143,7 @@ def auto_equip(story_id):
 	elif story_id == 7:
 		weapon_ids = [13, 12, 11, 10]
 	elif story_id == 8:
-		weapon_ids = [15, 14, 13, 12]
+		weapon_ids = [14, 15, 13, 12]
 	elif story_id == 9:
 		weapon_ids = [16, 17, 15, 14]
 	elif story_id == 10:
