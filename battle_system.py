@@ -1,6 +1,7 @@
 import random
 import sys
 import time
+import pdb
 
 import story_panel
 from common import *
@@ -33,7 +34,7 @@ def init(story_id):
 		status.append(Status(_(i[0]), i[1], i[2], i[3], i[4], i[5]))
 	
 	global battlers
-	battlers.append(Battler(_("You"), HERO[story_id - 1]))
+	battlers.append(Battler(_("10th magical girl"), HERO[story_id - 1]))
 	
 	battlers.append(Battler(_(BOSSES[story_id - 1][0]), BOSSES[story_id - 1][1], BOSSES[story_id - 1][2], BOSSES[story_id - 1][3]))
 	for i in equiped_weapons:
@@ -57,34 +58,44 @@ def init(story_id):
 	if story_id == 1:
 		battlers[1].equip_weapon(weapons[1])
 		battlers[1].equip_weapon(weapons[3])
-		battlers[1].add_status(status[3])
+		battlers[1].add_status(status[2])
 	elif story_id == 2:
+		battlers[0].add_status(status[3])
 		battlers[1].equip_weapon(weapons[4])
 		battlers[1].equip_weapon(weapons[6])
 		skills[4].hp_cost = int(battlers[1].hp * 0.05)
 		battlers[1].add_skill(skills[4])
 	elif story_id == 3:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[7])
 	elif story_id == 4:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[9])
 		battlers[1].equip_weapon(weapons[8])
 		battlers[0].add_status(status[6])
 	elif story_id == 5:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[11])
 		battlers[1].equip_weapon(weapons[10])
+		battlers[1].add_status(status[7])
 	elif story_id == 6:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[13])
 		battlers[1].equip_weapon(weapons[12])
 	elif story_id == 7:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[14])
 		battlers[1].equip_weapon(weapons[15])
 	elif story_id == 8:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[16])
 		battlers[1].equip_weapon(weapons[17])
 	elif story_id == 9:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[18])
 		battlers[1].equip_weapon(weapons[19])
 	elif story_id == 10:
+		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[20])
 		battlers[1].equip_weapon(weapons[21])
 		
@@ -126,6 +137,8 @@ def attack_in_turn(attacker, target):
 	total_damage = 0
 	total_hit = 0
 	cover_damage = 0
+	total_increased_damage = 0
+	total_healed_hp = 0
 	
 	wp = attacker.get_current_weapon()
 	rps = wp.rps
@@ -154,9 +167,17 @@ def attack_in_turn(attacker, target):
 							
 						print("{:>4} ".format(dmg), end="")
 						
-						if attack(target, dmg):
-							total_hit += 1
-							total_damage += dmg
+						healed_hp, increased_damage = berserk_status(attacker, target, dmg)
+						dmg += dmg + increased_damage
+						
+						total_hit += 1
+						total_damage += dmg
+						total_healed_hp += healed_hp
+						total_increased_damage += increased_damage
+						
+						attacker.hp_change(healed_hp) # berserk
+						
+						attack(target, dmg)
 					else:
 						cover_damage += dmg
 						print_without_enter(COLORS.CYAN)
@@ -183,6 +204,7 @@ def attack_in_turn(attacker, target):
 				
 			wait_and_flush(1 / rps)
 			
+	print_berserk_effect(attacker, target, total_healed_hp, total_increased_damage)
 			
 	return total_hit, total_damage, cover_damage
 
@@ -513,7 +535,27 @@ def remove_status(battler, id):
 	battler.remove_evade_bouns()
 	battler.remove_status(id)
 		
-		
+def berserk_status(attacker, target, orig_dmg):
+	#pdb.set_trace()
+	if not attacker.status:
+		return 0, 0
+	
+	for i in attacker.status:
+		if i.name == status[7].name:
+			healed_hp = int(orig_dmg * 0.2)
+			increase_damage = int(orig_dmg * 0.2)
+			return healed_hp, increase_damage
+	
+	return 0, 0
+			
+def print_berserk_effect(attacker, target, healed_hp, increased_damage):
+	if not attacker.status:
+		return 
+
+	for i in attacker.status:
+		if i.name == status[7].name:
+			print(_("(BERSERK EFFECT: MP + %s, DAMAGE + %s)") % (healed_hp, increased_damage))
+			
 def check_status():
 	for k, i in enumerate(battlers):
 		if not i.status:

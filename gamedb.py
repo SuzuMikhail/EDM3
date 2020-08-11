@@ -292,7 +292,7 @@ STR_ZH = {
 	"Meteor Missile":  "小型流星星际导弹",
 	
 	
-	"You": "你",
+	"10th magical girl": "第十位魔法少女",
 	"New world godness": "新世界女神",
 	"Happy virus maker": "乐流感大师",
 	"VR Dominator": "ＶＲ支配者",
@@ -327,6 +327,7 @@ STR_ZH = {
 	"Switch weapon": "切换武器",
 	
 	"(%s hit, %s damage)": "（命中 %s 次, 造成 %s 点伤害）",
+	"(Cover: %s damage)": "（掩体：受到 %s 点伤害）",
 	"MP CHANGED: %s": "魔力变化了: %s",
 	
 	"EVAD": "回避",
@@ -379,6 +380,7 @@ STR_ZH = {
 	"C.BURN": "化学燃烧",
 	"HACKING": "开挂",
 	"WANTED": "全球通缉",
+	"BERSERK": "狂战",
 	
 	"[SHOCKED]": "触电",
 	
@@ -396,6 +398,7 @@ STR_ZH = {
 	"New items are in your inventory.": "新的道具已经收进了你的仓库。",
 	
 	"I have turn on my cheat program!": "傻了吧，爷会开挂！",
+	"(BERSERK EFFECT: MP + %s, DAMAGE + %s)": "（狂战效果： 自身魔力 + %s, 造成伤害 + %s）",
 }
 		
 WEAPONS = [
@@ -414,7 +417,7 @@ WEAPONS = [
 	["20x102mm CIWS", "",    60,  55, 6000,  50, -20],
 	
 	["105mm Cannon", "",    4300,  1,  3,   5,  -23], # boss 5 used
-	["30x165mm CIWS", "",   100,  60, 8000,  30, -20],
+	["30x165mm CIWS", "",   100,  50, 8000,  30, -20],
 	
 	["Stone Missile",  "",  7000,  1,  1,   0,  -20], # boss 6 used
 	["Magical Rifle",  "",    700,  10,  80,  8,  5],
@@ -438,8 +441,8 @@ HERO = [
 	9000,
 	
 	14000,
-	18000,
-	24000,
+	22000,
+	32000,
 	
 	32000,
 	40000,
@@ -453,7 +456,7 @@ BOSSES = [
 	["VR Dominator",     9500, 95, 0],
 	
 	["Magical emperor", 16000, 70,  20],
-	["Magical Berserker", 30000, 70, 25],
+	["Magical Berserker", 22000, 70, 25],
 	["Ubermensch",      40000,  80,  20],
 	
 	["United souls",    60000,  90, 0],
@@ -487,11 +490,12 @@ SKILLS = [
 STATUS = [
 	["BURN",      5,  -5, -5,   True, -3],
 	["SHOCK",     5, -25, -25,  True, -1],
-    ["HEALING",   5,   0, 0,    True, 100],
+    ["HEALING+", 150,   0, 0,    True, 2],
     ["HEALING+", 150,  0, 0,    True, 0.5],
 	["C.BURN",    20,  -30, -30, True, -6],
 	["HACKING",   5, 150, 150,   True, 18],
 	["WANTED",  150,  -10, -10,  True, -2],
+	["BERSERK", 150,  0, 0,   True,  0],
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"
