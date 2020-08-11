@@ -374,6 +374,7 @@ STR_ZH = {
 	"BOLT": "雷霆冲击",
 	"HEAL": "魔力恢复",
 	"CHMICAL FIRE": "化学烈焰",
+	"SOUL CURSE": "灵魂诅咒",
 	
 	"BURN": "燃烧",
 	"SHOCK": "触电",
@@ -381,6 +382,7 @@ STR_ZH = {
 	"HACKING": "开挂",
 	"WANTED": "全球通缉",
 	"BERSERK": "狂战",
+	"CURSED": "诅咒",
 	
 	"[SHOCKED]": "触电",
 	
@@ -399,6 +401,7 @@ STR_ZH = {
 	
 	"I have turn on my cheat program!": "傻了吧，爷会开挂！",
 	"(BERSERK EFFECT: MP + %s, DAMAGE + %s)": "（狂战效果： 自身魔力恢复 %s, 造成伤害增加 %s）",
+	"Why must you let us to disappear!!!!": "你为什么一定要让我们消失啊！！！！",
 }
 		
 WEAPONS = [
@@ -422,8 +425,8 @@ WEAPONS = [
 	["Stone Missile",  "",  10000,  1,  1,   0,  -25], # boss 6 used
 	["Magical Rifle",  "",    700,  10,  80,  8,  5],
 	
-	["Magic Storm",   "",    300,  30,  500,  2,  10], # boss 7 used
-	["Jupiter Missile",  "",   10000,  1,  1,   0,   -25],
+	["Magic Storm",   "",    300,  35,  500,  2,  10], # boss 7 used
+	["Jupiter Missile",  "",   15000,  1,  1,   0,   -25],
 	
 	["Antimatter RFL",  "",   1000, 10,  100,  10,   10], # boss 8
 	["Thor Missile",  "",    20000,  1,   1,   0,   -25],
@@ -484,18 +487,24 @@ SKILLS = [
 	["ICE POWER", "Heal yourself",                            0, None, 15],
 	["BOLT",       "Shock enemy and make them can not move", 40,  1,  10],
 	["HEAL",      "Heal yourself",                           0, None, 30],
-	["CHMICAL FIRE", "",                                      0,   4,  20]
+	["CHMICAL FIRE", "",                                      0,   4,  20],
+	["SOUL CURSE",     "",                                   0,    8,  25],
 ]
 
 STATUS = [
 	["BURN",      5,  -5, -5,   True, -3],
 	["SHOCK",     5, -25, -25,  True, -1],
+	
     ["HEALING+", 150,   0, 0,    True, 2],
     ["HEALING+", 150,  0, 0,    True, 0.5],
+	
 	["C.BURN",    20,  -30, -30, True, -6],
 	["HACKING",   5, 150, 150,   True, 18],
+	
 	["WANTED",  150,  -10, -10,  True, -2],
-	["BERSERK", 150,  0, 0,   True,  0],
+	["BERSERK", 150,  0, 0,     True,   0],
+	
+	["CURSED",   10, -10, -10,  True,  -3],
 ]
 
 LEVEL_UP_MSG = "LEVEL UP!"

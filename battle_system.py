@@ -2,6 +2,8 @@ import random
 import sys
 import time
 import pdb
+from tkinter import Tk
+from tkinter import messagebox
 
 import story_panel
 from common import *
@@ -16,8 +18,13 @@ covers = []
 status = []
 skills = []
 enemy_skills = []
+root = Tk() #tk window
+root.withdraw()
 
 def init(story_id):
+	root = Tk()
+	root.withdraw()
+
 	global weapons
 	for i in WEAPONS:
 		weapons.append(Weapon(_(i[0]), i[1], i[2], i[3], i[4], i[5], i[6]))
@@ -99,6 +106,13 @@ def init(story_id):
 		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[14])
 		battlers[1].equip_weapon(weapons[15])
+		
+		battlers[1].add_skill(enemy_skills[3])
+		battlers[1].add_skill(enemy_skills[1])
+		battlers[1].skills[0].hp_cost = -int(battlers[1].hp / 3)
+		battlers[1].skills[1].hp_cost = -int(battlers[1].hp / 5)
+		battlers[1].add_skill(enemy_skills[5])
+		
 	elif story_id == 8:
 		battlers[0].add_status(status[2])
 		battlers[0].add_status(status[7])
@@ -323,12 +337,20 @@ def use_skill(attacker, target, id):
 	attacker.hp_change(-s.hp_cost)
 	if s.status:
 		target.add_status(s.status)
-	
+		
 	print_bar("SKILL")
 	print_without_enter(COLORS.YELLOW)
 	print(_("MP CHANGED: %s") % -s.hp_cost)
 	print("%s" % s.name)
 	print_without_enter(COLORS.ENDC)
+	
+	if s.name == enemy_skills[5].name: # soul curse
+		root.lower()
+		root.attributes('-topmost', 1)              
+		messagebox.showwarning(_(attacker.name), _("Why must you let us to disappear!!!!"), parent=root)
+		root.focus_set()
+		root.tkraise()
+		
 	return True
 	
 def player_use_skill(id):
@@ -525,13 +547,45 @@ def enemy_action(story_id):
 					return
 		else:
 			enemy_action.ready_for_next_fire = False
-			
-		
-		
+
 	elif story_id == 7:
+		if battlers[1].hp <= (battlers[1].maxhp * 0.33):
+			if use_skill(battlers[1], battlers[0], 0):
+				return
+		if battlers[1].hp <= (battlers[1].maxhp * 0.5):
+			if use_skill(battlers[1], battlers[0], 1):
+				return
+	
+		if use_skill(battlers[1], battlers[0], 2):
+			return
+	
 		if wp.is_magazine_empty():
 			battler_reload(battlers[1])
 			return
+			
+		if not enemy_action.ready_for_next_fire:
+			if wp.is_magazine_empty():
+				battler_reload(battlers[1])
+				return			
+				
+			if battlers[0].is_covered():
+				if battlers[1].current_weapon_id == 1: # if hold RPG
+					hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg, cover_dmg)
+					return
+				
+					
+				battler_switch_weapon(battlers[1], 1)
+				enemy_action.ready_for_next_fire = True
+				enemy_action.hold_rpg = True
+				return
+			else:
+				if enemy_action.hold_rpg:
+					battler_switch_weapon(battlers[1], 0)
+					enemy_action.hold_rpg = False
+					return
+		else:
+			enemy_action.ready_for_next_fire = False
 			
 	elif story_id == 8:
 		if wp.is_magazine_empty():
