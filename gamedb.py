@@ -441,7 +441,7 @@ HERO = [
 	9000,
 	
 	14000,
-	22000,
+	20000,
 	32000,
 	
 	32000,
@@ -456,7 +456,7 @@ BOSSES = [
 	["VR Dominator",     9500, 95, 0],
 	
 	["Magical emperor", 16000, 70,  20],
-	["Magical Berserker", 22000, 70, 25],
+	["Magical Berserker", 25000, 70, 25],
 	["Ubermensch",      40000,  80,  20],
 	
 	["United souls",    60000,  90, 0],

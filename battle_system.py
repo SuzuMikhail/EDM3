@@ -542,7 +542,7 @@ def berserk_status(attacker, target, orig_dmg):
 	
 	for i in attacker.status:
 		if i.name == status[7].name:
-			healed_hp = int(orig_dmg * 0.2)
+			healed_hp = int(orig_dmg * 0.1)
 			increase_damage = int(orig_dmg * 0.2)
 			return healed_hp, increase_damage
 	
