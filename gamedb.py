@@ -284,6 +284,13 @@ STR_ZH = {
 	"Magical Rifle": "魔法轻型突击步枪",
 	"Magic Storm":   "魔法武器疾风暴雨",
 	"Jupiter Missile":  "诸神之王中程导弹",
+	"Antimatter RFL": "反物质突击步枪",
+	"Thor Missile":  "雷神式远程导弹",
+	"Antimatter LMG": "反物质轻型机枪",
+	"Minute Missile": "一分钟式洲际导弹",
+	"Antimatter RAIN": "反物质暴雨狂潮",
+	"Meteor Missile":  "小型流星星际导弹",
+	
 	
 	"You": "你",
 	"New world godness": "新世界女神",
@@ -293,6 +300,9 @@ STR_ZH = {
 	"Magical Berserker": "魔法狂战士",
 	"Ubermensch": "超人约伯满取",
 	"United souls": "统一的人类灵魂",
+	"MAGICA LILIUM": "百合星魔法少女",
+	"The New Lord":  "新世界天父",
+	"DEA LILIUM":    "百合星神",
 	
 	"Forest": "森林",
 	"Street": "街道",
@@ -393,38 +403,63 @@ WEAPONS = [
 	["7.62x39mm LMG",  "",    18, 10, 300, 12, -5], # boss 1 used
 	["12.7x99mm HMG",  "",    30, 8, 100, 30, -30],
 	["12.7x108mm HMG", "",    48, 7, 100, 35, -35],
+	
 	["7.62 Gatling",   "",    22, 45, 800, 2,  -38], # boss 2 used
 	["Storm Generator",   "",     8, 200, 2400, 8, -12],
 	["RPG Classic",    "",  3000,   1,   15, 5, -25],
+	
 	["20x102 Vulcan", "" ,    60, 30, 3500,  50, -45], # boss 3 used
+	
 	["Wired Missile", "",   3500,  1,  1,  5,  -25], # boss 4 used
 	["20x102mm CIWS", "",    60,  55, 6000,  50, -20],
+	
 	["105mm Cannon", "",    4300,  1,  3,   5,  -23], # boss 5 used
 	["30x165mm CIWS", "",   100,  60, 8000,  30, -20],
+	
 	["Stone Missile",  "",  7000,  1,  1,   0,  -20], # boss 6 used
 	["Magical Rifle",  "",    700,  10,  80,  8,  5],
+	
 	["Magic Storm",   "",    300,  30,  500,  2,  10], # boss 7 used
-	["Jupiter Missile",  "",   10000,  1,  1,   0,   -10]
+	["Jupiter Missile",  "",   10000,  1,  1,   0,   -10],
+	
+	["Antimatter RFL",  "",   1000, 10,  100,  10,   10], # boss 8
+	["Thor Missile",  "",    20000,  1,   1,   0,   -10],
+	
+	["Antimatter LMG",  "",   1000,  25,  400,  10,  7], # boss 9
+	["Minute Missile",  "",  40000,  1,   1,   0,   -10],
+	
+	["Antimatter RAIN", "",   1000,  50,  1000,  0,   0], # boss 10
+	["Meteor Missile",  "",  60000,  1,   1,   0,     0]
 ]
 
 HERO = [
 	3000,
 	6000,
 	9000,
+	
 	14000,
 	18000,
 	24000,
+	
 	32000,
+	40000,
+	50000,
+	65000
 ]
 
 BOSSES = [
 	["New world godness", 9000, 95, 25],
 	["Happy virus maker", 15000, 85, 15],
 	["VR Dominator",     9500, 95, 0],
+	
 	["Magical emperor", 16000, 70,  20],
 	["Magical Berserker", 30000, 70, 25],
 	["Ubermensch",      40000,  80,  20],
+	
 	["United souls",    60000,  90, 0],
+	["MAGICA LILIUM",   80000,  90, 20],
+	["The New Lord",   100000,  90, 20],
+	["DEA LILIUM",     130000,  90, 10]
 ]
 
 COVERS = [

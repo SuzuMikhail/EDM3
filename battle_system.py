@@ -78,6 +78,15 @@ def init(story_id):
 	elif story_id == 7:
 		battlers[1].equip_weapon(weapons[14])
 		battlers[1].equip_weapon(weapons[15])
+	elif story_id == 8:
+		battlers[1].equip_weapon(weapons[16])
+		battlers[1].equip_weapon(weapons[17])
+	elif story_id == 9:
+		battlers[1].equip_weapon(weapons[18])
+		battlers[1].equip_weapon(weapons[19])
+	elif story_id == 10:
+		battlers[1].equip_weapon(weapons[20])
+		battlers[1].equip_weapon(weapons[21])
 		
 
 		
@@ -432,6 +441,31 @@ def enemy_action(story_id):
 				battler_switch_weapon(battlers[1], 1)
 			else:
 				battler_switch_weapon(battlers[1], 0)
+	elif story_id == 6:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+	
+	elif story_id == 7:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+			
+	elif story_id == 8:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+			
+	elif story_id == 9:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+			
+	elif story_id == 10:
+		if wp.is_magazine_empty():
+			battler_reload(battlers[1])
+			return
+	
 	
 	hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
 	show_damage(hit, dmg, cover_dmg)
