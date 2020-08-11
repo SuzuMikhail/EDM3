@@ -419,7 +419,7 @@ WEAPONS = [
 	["105mm Cannon", "",    4300,  1,  3,   5,  -23], # boss 5 used
 	["30x165mm CIWS", "",   100,  50, 8000,  30, -20],
 	
-	["Stone Missile",  "",  7000,  1,  1,   0,  -25], # boss 6 used
+	["Stone Missile",  "",  10000,  1,  1,   0,  -25], # boss 6 used
 	["Magical Rifle",  "",    700,  10,  80,  8,  5],
 	
 	["Magic Storm",   "",    300,  30,  500,  2,  10], # boss 7 used
@@ -442,7 +442,7 @@ HERO = [
 	
 	14000,
 	20000,
-	32000,
+	25000,
 	
 	32000,
 	40000,

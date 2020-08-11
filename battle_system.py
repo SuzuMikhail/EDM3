@@ -15,6 +15,7 @@ battlers = []
 covers = []
 status = []
 skills = []
+enemy_skills = []
 
 def init(story_id):
 	global weapons
@@ -47,6 +48,12 @@ def init(story_id):
 		else:
 			skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
 			
+	for i in SKILLS:
+		if i[3] or i[3] == 0: #if status is none
+			enemy_skills.append(Skill(_(i[0]), i[1], i[2], status[i[3]], i[4]))
+		else:
+			enemy_skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
+			
 	skills[0].hp_cost = int(battlers[0].hp * 0.03)
 	skills[1].hp_cost = -int(battlers[0].hp / 5)
 	skills[2].hp_cost = int(battlers[0].hp * 0.02)
@@ -63,8 +70,8 @@ def init(story_id):
 		battlers[0].add_status(status[3])
 		battlers[1].equip_weapon(weapons[4])
 		battlers[1].equip_weapon(weapons[6])
-		skills[4].hp_cost = int(battlers[1].hp * 0.05)
-		battlers[1].add_skill(skills[4])
+		enemy_skills[4].hp_cost = int(battlers[1].hp * 0.05)
+		battlers[1].add_skill(enemy_skills[4])
 	elif story_id == 3:
 		battlers[0].add_status(status[2])
 		battlers[1].equip_weapon(weapons[7])
@@ -80,22 +87,31 @@ def init(story_id):
 		battlers[1].add_status(status[7])
 	elif story_id == 6:
 		battlers[0].add_status(status[2])
+		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[13])
 		battlers[1].equip_weapon(weapons[12])
+		battlers[1].add_skill(enemy_skills[3])
+		battlers[1].add_skill(enemy_skills[1])
+		battlers[1].skills[0].hp_cost = -int(battlers[1].hp / 3)
+		battlers[1].skills[1].hp_cost = -int(battlers[1].hp / 5)
 	elif story_id == 7:
 		battlers[0].add_status(status[2])
+		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[14])
 		battlers[1].equip_weapon(weapons[15])
 	elif story_id == 8:
 		battlers[0].add_status(status[2])
+		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[16])
 		battlers[1].equip_weapon(weapons[17])
 	elif story_id == 9:
 		battlers[0].add_status(status[2])
+		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[18])
 		battlers[1].equip_weapon(weapons[19])
 	elif story_id == 10:
 		battlers[0].add_status(status[2])
+		battlers[0].add_status(status[7])
 		battlers[1].equip_weapon(weapons[20])
 		battlers[1].equip_weapon(weapons[21])
 		
@@ -402,6 +418,11 @@ def enemy_action(story_id):
 				return
 				
 			if battlers[0].is_covered():
+				if battlers[1].current_weapon_id == 1: # if hold RPG
+					hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg, cover_dmg)
+					return
+					
 				battler_switch_weapon(battlers[1], 1)
 				enemy_action.ready_for_next_fire = True
 				enemy_action.hold_rpg = True
@@ -438,8 +459,8 @@ def enemy_action(story_id):
 				
 			if battlers[0].is_covered():
 				if battlers[1].current_weapon_id == 1: # if hold RPG
-					hit, dmg = attack_in_turn(battlers[1], battlers[0])
-					show_damage(hit, dmg)
+					hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg, cover_dmg)
 					return
 					
 				battler_switch_weapon(battlers[1], 1)
@@ -469,10 +490,44 @@ def enemy_action(story_id):
 			else:
 				battler_switch_weapon(battlers[1], 0)
 	elif story_id == 6:
+		if battlers[1].hp <= (battlers[1].maxhp * 0.33):
+			if use_skill(battlers[1], battlers[0], 0):
+				return
+		if battlers[1].hp <= (battlers[1].maxhp * 0.5):
+			if use_skill(battlers[1], battlers[0], 1):
+				return
+
+
 		if wp.is_magazine_empty():
 			battler_reload(battlers[1])
 			return
-	
+			
+		if not enemy_action.ready_for_next_fire:
+			if wp.is_magazine_empty():
+				battler_reload(battlers[1])
+				return			
+				
+			if battlers[0].is_covered():
+				if battlers[1].current_weapon_id == 1: # if hold RPG
+					hit, dmg, cover_dmg = attack_in_turn(battlers[1], battlers[0])
+					show_damage(hit, dmg, cover_dmg)
+					return
+				
+					
+				battler_switch_weapon(battlers[1], 1)
+				enemy_action.ready_for_next_fire = True
+				enemy_action.hold_rpg = True
+				return
+			else:
+				if enemy_action.hold_rpg:
+					battler_switch_weapon(battlers[1], 0)
+					enemy_action.hold_rpg = False
+					return
+		else:
+			enemy_action.ready_for_next_fire = False
+			
+		
+		
 	elif story_id == 7:
 		if wp.is_magazine_empty():
 			battler_reload(battlers[1])

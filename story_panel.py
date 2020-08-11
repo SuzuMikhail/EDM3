@@ -26,7 +26,7 @@ EXIT = 0
 
 
 def story():
-	story_level = 5
+	story_level = 7
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
