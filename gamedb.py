@@ -375,7 +375,7 @@ STR_ZH = {
 	"[SWITCH WEAPON TO %s]": "[切换武器至 %s]",
 	
 	"FIRE CURSE": "烈火诅咒",
-	"ICE POWER": "寒冰之力",
+	"ICE HEAL": "寒冰疗愈",
 	"BOLT": "雷霆冲击",
 	"HEAL": "魔力恢复",
 	"CHMICAL FIRE": "化学烈焰",
@@ -408,6 +408,8 @@ STR_ZH = {
 	"I have turn on my cheat program!": "傻了吧，爷会开挂！",
 	"(BERSERK EFFECT: MP + %s, DAMAGE + %s)": "（狂战效果： 自身魔力恢复 %s, 造成伤害增加 %s）",
 	"Why must you let us to disappear!!!!": "你为什么一定要让我们消失啊！！！！",
+	"DEA LILIUM was defeated. Your power can make you be the god of this universe. The destiny of the universe are on your hand...": "百合星神被打败了。你的力量已经可以使你成为这个宇宙的神。大宇宙的命运就交给你了……",
+	"CHOOSE EPISODE?(NUMBER, 0-10)>": "选关？（数字，0-10）>",
 }
 		
 WEAPONS = [
@@ -440,8 +442,8 @@ WEAPONS = [
 	["Antimatter LMG",  "",    650,  40,  1000,  10,  7], # boss 9
 	["Minute Missile",  "",  30000,  1,   1,   0,   -25],
 	
-	["Antimatter RAIN", "",    650,  80,  1000,  0,   0], # boss 10
-	["Meteor Missile",  "",   3000,  15,   30,   0,     -20],
+	["Antimatter RAIN", "",    650, 100,  1000,  0,   0], # boss 10
+	["Meteor Missile",  "",   3000,  25,   500,   0,     0],
 	
 	["Magic Shotgun",   "",   300,  90,  5000,  4,   10],
 ]
@@ -458,7 +460,7 @@ HERO = [
 	32000,
 	48000,
 	60000,
-	100000
+	90000
 ]
 
 BOSSES = [
@@ -499,7 +501,7 @@ COVERS_3 = [
 
 SKILLS = [
 	["FIRE CURSE",      "Burn enemy and keep them burning",  80,   0,  15],
-	["ICE POWER", "Heal yourself",                            0, None, 15],
+	["ICE HEAL", "Heal yourself",                            0, None, 15],
 	["BOLT",       "Shock enemy and make them can not move", 40,  1,  10],
 	["HEAL",      "Heal yourself",                           0, None, 30],
 	["CHMICAL FIRE", "",                                      0,   4,  20],
@@ -511,7 +513,7 @@ STATUS = [
 	["SHOCK",     5, -25, -25,  True, -1],
 	
     ["HEALING+", 150,   0, 0,    True, 2],
-    ["HEALING+", 150,  0, 0,    True, 0.5],
+    ["HEALING+", 150,  0, 0,    True, 0.5], #boos 1 used
 	
 	["C.BURN",    20,  -30, -30, True, -6],
 	["HACKING",   5, 150, 150,   True, 18],
@@ -520,8 +522,9 @@ STATUS = [
 	["BERSERK", 150,  0, 0,     True,   0],
 	
 	["CURSED",   10, -10, -10,  True,  -5],
-	["YURI",    150,  10,  10,  True,   4],
+	["YURI",    150,  10,  10,  True,   6],
 ]
+
 
 LEVEL_UP_MSG = "LEVEL UP!"
 NEWITEM_MSG = "New items are in your inventory."

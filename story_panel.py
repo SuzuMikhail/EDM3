@@ -26,7 +26,16 @@ EXIT = 0
 
 
 def story():
-	story_level = 10
+	i = 0
+
+	cmd_char = input(_("CHOOSE EPISODE?(NUMBER, 0-10)>"))
+	try:
+		i = int(cmd_char)
+	except ValueError:
+		pass
+
+	story_level = i
+	
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
@@ -34,7 +43,11 @@ def story():
 					print_victory()
 					story_level += 1
 				else:
-					pass
+					tkmessage("", _("DEA LILIUM was defeated. Your power can make you be the god of this universe. The destiny of the universe are on your hand..."))
+					time.sleep(6)
+					sys.exit(0)
+		else:
+			story_level += 1
 
 def enter_episode(story_id=0):
 	tkinit()
@@ -51,7 +64,8 @@ def enter_episode(story_id=0):
 		"ep6",
 		"ep7",
 		"ep8",
-		"ep9"
+		"ep9",
+		"ep10"
 	]
 	
 	enemy_id = [
@@ -70,14 +84,15 @@ def enter_episode(story_id=0):
 
 	storyfile_suffix = ".txt"
 	
-	if story_id != 10:
-		for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
+	
+	for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
+		if story_id != 10:
 			print(i, end="")
 			sys.stdout.flush()
-			#time.sleep(.6)
-		print("")
-	else:
-		tkmessage("DEA LILIUM", "You came here at last.")
+		else:
+			tkmessage(_("DEA LILIUM"), i)
+	print("")
+		
 		
 	inventory_is_ok = False
 
@@ -94,7 +109,7 @@ def enter_episode(story_id=0):
 			
 		i = main_menu() 
 		if i is SCENE_BATTLE:
-			if enemy_id[story_id] == 0:
+			if story_id == 0:
 				return False
 			return True
 		elif i is SCENE_INVENTORY:
@@ -136,7 +151,7 @@ def set_weapons(weapon_ids):
 def auto_equip(story_id):
 	weapon_ids = []
 	if story_id == 1:
-		weapon_ids = [0, 2, 5]
+		weapon_ids = [0, 2]
 	elif story_id == 2:
 		weapon_ids = [0, 1, 2, 3]
 	elif story_id == 3:
@@ -203,7 +218,6 @@ def choose_weapon():
 			i = int(cmd_char)
 			if (i - 1) <= len(party_weapons):
 				id = party_weapons[i - 1]
-				#print("ID ", id)
 				if id in party_weapons:
 					if equip_wp(id):
 						print(_("Equiped %s") % _(WEAPONS[id][0]))

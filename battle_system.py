@@ -71,7 +71,7 @@ def init(story_id):
 	if story_id == 1:
 		battlers[1].equip_weapon(weapons[1])
 		battlers[1].equip_weapon(weapons[3])
-		battlers[1].add_status(status[2])
+		battlers[1].add_status(status[3])
 	elif story_id == 2:
 		battlers[0].add_status(status[3])
 		battlers[1].equip_weapon(weapons[4])
@@ -242,7 +242,7 @@ def attack_in_turn(attacker, target):
 					target_cover.hp_change(-dmg)
 			else:
 				print_without_enter(COLORS.RED)
-				print(">AMMO OUT<")
+				print(_(">AMMO OUT<"))
 				print_without_enter(COLORS.ENDC)
 				break
 				
