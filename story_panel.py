@@ -26,15 +26,19 @@ EXIT = 0
 
 
 def story():
-	story_level = 9
+	story_level = 10
 	while 1:
 		if enter_episode(story_level):
 			if battle_system.main(story_level):
-				print_victory()
-				story_level += 1
-		
+				if story_level != 10:
+					print_victory()
+					story_level += 1
+				else:
+					pass
 
 def enter_episode(story_id=0):
+	tkinit()
+
 	story_path = "./Stories/"
 
 	story = [
@@ -66,12 +70,15 @@ def enter_episode(story_id=0):
 
 	storyfile_suffix = ".txt"
 	
-	for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
-		print(i, end="")
-		sys.stdout.flush()
-		#time.sleep(.6)
-	print("")
-	
+	if story_id != 10:
+		for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
+			print(i, end="")
+			sys.stdout.flush()
+			#time.sleep(.6)
+		print("")
+	else:
+		tkmessage("DEA LILIUM", "You came here at last.")
+		
 	inventory_is_ok = False
 
 	while 1:

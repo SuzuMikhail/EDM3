@@ -440,10 +440,10 @@ WEAPONS = [
 	["Antimatter LMG",  "",    650,  40,  1000,  10,  7], # boss 9
 	["Minute Missile",  "",  30000,  1,   1,   0,   -25],
 	
-	["Antimatter RAIN", "",   1000,  50,  1000,  0,   0], # boss 10
-	["Meteor Missile",  "",  20000,  2,   2,   0,     -25],
+	["Antimatter RAIN", "",    650,  80,  1000,  0,   0], # boss 10
+	["Meteor Missile",  "",   3000,  15,   30,   0,     -20],
 	
-	["Magic Shotgun",   "",   300,  90, 5000,  4,   -10],
+	["Magic Shotgun",   "",   300,  90,  5000,  4,   10],
 ]
 
 HERO = [
@@ -458,7 +458,7 @@ HERO = [
 	32000,
 	48000,
 	60000,
-	80000
+	100000
 ]
 
 BOSSES = [
@@ -473,7 +473,7 @@ BOSSES = [
 	["United souls",    60000,  90, 0],
 	["MAGICA LILIUM",   50000,  90, 20],
 	["The New Lord",   120000,  90, 20],
-	["DEA LILIUM",     130000,  90, 10]
+	["DEA LILIUM",     300000,  90, 10]
 ]
 
 COVERS = [
