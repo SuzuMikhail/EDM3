@@ -280,9 +280,9 @@ def show_covers():
 def choose_covers():
 	print(_("[W]:Leave cover, [`][0]:Exit"))
 	id = input(_("COVER COMMAND?>"))
-	if id is "`" or id is "0":
+	if id =="`" or id =="0":
 		return False
-	if id is "w":
+	if id =="w":
 		if battlers[0].is_covered():
 			print(_("[LEAVE COVER]"))
 			battlers[0].leave_cover()
@@ -308,9 +308,9 @@ def choose_covers():
 	battlers[0].cover_object = c
 	print(_("Cover changed to: %s ") % c.name)
 	
-	if id is 4:
+	if id ==4:
 		for j, i in enumerate(battlers[0].status):
-			if i.name is status[4].name:
+			if i.name ==status[4].name:
 				print(_("Fire was disappeared due to you jumped in sea."))
 				remove_status(battlers[0], j)
 	
@@ -376,7 +376,7 @@ def player_use_skill(id):
 	return use_skill(battlers[0], battlers[1], id)
 	
 def command_perform(cmd_char):
-	if cmd_char is "w":
+	if cmd_char =="w":
 		wp = battlers[0].get_current_weapon()
 		if wp.is_magazine_empty():
 			print(_(">AMMO OUT<"))
@@ -385,38 +385,38 @@ def command_perform(cmd_char):
 			hit, dmg, cover_dmg = attack_in_turn(battlers[0], battlers[1])
 			show_damage(hit, dmg, cover_dmg)
 			return True
-	elif cmd_char is "s":
+	elif cmd_char =="s":
 		show_covers()
 		if choose_covers():
 			return True
 		return False
-	elif cmd_char is "r":
+	elif cmd_char =="r":
 		battler_reload(battlers[0])
 		return True
-	elif cmd_char is "z":
+	elif cmd_char =="z":
 		return player_use_skill(0)
-	elif cmd_char is "x":
+	elif cmd_char =="x":
 		return player_use_skill(1)
-	elif cmd_char is "c":
+	elif cmd_char =="c":
 		return player_use_skill(2)
-	elif cmd_char is "v":
+	elif cmd_char =="v":
 		return player_use_skill(3)
-	elif cmd_char is "i":
+	elif cmd_char =="i":
 		print_playerinfo()
 		return False
-	elif cmd_char is "1":
+	elif cmd_char =="1":
 		if battler_switch_weapon(battlers[0], 0):
 			return True
 		return False
-	elif cmd_char is "2":
+	elif cmd_char =="2":
 		if battler_switch_weapon(battlers[0], 1):
 			return True
 		return False
-	elif cmd_char is "3":
+	elif cmd_char =="3":
 		if battler_switch_weapon(battlers[0], 2):
 			return True
 		return False
-	elif cmd_char is "4":
+	elif cmd_char =="4":
 		if battler_switch_weapon(battlers[0], 3):
 			return True
 		return False
@@ -853,7 +853,7 @@ def print_currentweapon(battler, detail=False):
 		ammo = i.ammo
 		max_ammo = i.max_ammo
 		desc = i.desc
-		if j is battler.current_weapon_id:
+		if j ==battler.current_weapon_id:
 			print(COLORS.GREEN, end="")
 		if ammo <= int(max_ammo / 4):
 			print_without_enter(COLORS.RED)

@@ -33,6 +33,9 @@ def story():
 		i = int(cmd_char)
 	except ValueError:
 		pass
+		
+	if i > 10:
+		story()
 
 	story_level = i
 	
@@ -108,15 +111,15 @@ def enter_episode(story_id=0):
 			auto_equip(story_id)
 			
 		i = main_menu() 
-		if i is SCENE_BATTLE:
+		if i == SCENE_BATTLE:
 			if story_id == 0:
 				return False
 			return True
-		elif i is SCENE_INVENTORY:
+		elif i == SCENE_INVENTORY:
 			print_all_weapons()
 			while 1:
 				i = choose_weapon()
-				if i is EXIT:
+				if i == EXIT:
 					break
 			#return False
 		else:
@@ -204,9 +207,9 @@ def print_inventory_tips():
 def choose_weapon():
 	print_inventory_tips()
 	cmd_char = input(_("INVENTORY COMMAND?(LOW CASE)>"))
-	if cmd_char is "0":
+	if cmd_char == "0":
 		return EXIT
-	elif cmd_char is "d":
+	elif cmd_char == "d":
 		if equiped_weapons:
 			print_without_enter(COLORS.GREEN)
 			print(_("All weapon was disarmed."))
@@ -243,9 +246,9 @@ def print_main_menu():
 def main_menu():
 	print_main_menu()
 	cmd_char = input(_("COMMAND?(LOW CASE)>"))
-	if cmd_char is "e":
+	if cmd_char == "e":
 		return SCENE_BATTLE
-	elif cmd_char is "i":
+	elif cmd_char == "i":
 		return SCENE_INVENTORY
 	else:
 		return SCENE_NONE
