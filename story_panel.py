@@ -13,11 +13,13 @@ from gamedb import equiped_weapons
 import battle_system
 from common import *
 
-
 _ = translate
 SCENE_NONE = 0
 SCENE_BATTLE = 1
 SCENE_INVENTORY = 2
+ENTER_BATTLE = 1
+ENTER_NONE = 0
+ENTER_NEXT = 2
 
 EQUIPED = 1
 NOT_EQUIPED = -1
@@ -26,6 +28,7 @@ EXIT = 0
 
 
 def story():
+	tkinit()
 	i = 0
 
 	cmd_char = input(_("CHOOSE EPISODE?(NUMBER, 0-10)>"))
@@ -34,13 +37,14 @@ def story():
 	except ValueError:
 		pass
 		
-	if i > 10:
+	if i > 10 or i == "":
 		story()
 
 	story_level = i
 	
 	while 1:
-		if enter_episode(story_level):
+		i = enter_episode(story_level)
+		if i == ENTER_BATTLE:
 			if battle_system.main(story_level):
 				if story_level != 10:
 					print_victory()
@@ -49,12 +53,12 @@ def story():
 					tkmessage("", _("DEA LILIUM was defeated. Your power can make you be the god of this universe. The destiny of the universe are on your hand..."))
 					time.sleep(6)
 					sys.exit(0)
-		else:
+		elif i == ENTER_NEXT:
 			story_level += 1
+		else:
+			pass
 
 def enter_episode(story_id=0):
-	tkinit()
-
 	story_path = "./Stories/"
 
 	story = [
@@ -88,15 +92,16 @@ def enter_episode(story_id=0):
 	storyfile_suffix = ".txt"
 	
 	
-	for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
-		if story_id != 10:
-			print(i, end="")
-			sys.stdout.flush()
-		else:
-			tkmessage(_("DEA LILIUM"), i)
-	print("")
-		
-		
+	if not enter_episode.is_shown:
+		for i in open(story_path + story[story_id] + _("_en") + storyfile_suffix, encoding='utf-8'):
+			if story_id != 10:
+				print(i, end="")
+				sys.stdout.flush()
+			else:
+				tkmessage(_("DEA LILIUM"), i)
+		print("")
+			
+	enter_episode.is_shown = True	
 	inventory_is_ok = False
 
 	while 1:
@@ -113,17 +118,20 @@ def enter_episode(story_id=0):
 		i = main_menu() 
 		if i == SCENE_BATTLE:
 			if story_id == 0:
-				return False
-			return True
+				return ENTER_NEXT
+			return ENTER_BATTLE
 		elif i == SCENE_INVENTORY:
 			print_all_weapons()
 			while 1:
 				i = choose_weapon()
 				if i == EXIT:
 					break
-			#return False
+		elif not i:
+			return ENTER_NONE
 		else:
-			return False
+			return ENTER_NONE
+
+enter_episode.is_shown = False
 	
 def set_inventory(story_id=0):
 	if story_id == 1:
