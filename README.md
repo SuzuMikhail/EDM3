@@ -7,9 +7,6 @@ run ./edm3_zh.py or ./edm3_en.py to play game.
 
 Only the original game can repersent me. Other mods can't repersent me anything. And I don't care what mod they make.
 
-Tested on Windows XP(SP3). Other platform are NOT supported.(I don't care)
-
-===
 一个基于文字的 RPG.
 
 EDM 的意思是：执法者，多次元魔法少女。
@@ -18,4 +15,5 @@ EDM 的意思是：执法者，多次元魔法少女。
 
 只有原始游戏可以代表我的个人想法。其他基于我的代码制作的游戏不能代表我的任何想法。而且我不在乎他们做出什么玩意。
 
-在 Windows XP SP3 上测试，可以运行。其他系统不保证可以正常运行。（我不在乎）
+Linux 需要的依赖（Dependency on Linux）：
+- Python3-tk

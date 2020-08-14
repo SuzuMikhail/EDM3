@@ -253,7 +253,7 @@ def print_main_menu():
 	
 def main_menu():
 	print_main_menu()
-	cmd_char = input(_("COMMAND?(LOW CASE)>"))
+	cmd_char = input(_("COMMAND?(LOW CASE)>")).lower()
 	if cmd_char == "e":
 		return SCENE_BATTLE
 	elif cmd_char == "i":

@@ -1,7 +1,7 @@
 import random
 import sys
 import time
-import pdb
+from datetime import datetime
 
 import story_panel
 from common import *
@@ -162,6 +162,7 @@ def attack(target, hp):
 	return True
 	
 def get_rate():
+	random.seed(datetime.now())
 	return random.randrange(101)
 	
 def get_attacker_final_hit_percent(attacker):
@@ -279,7 +280,7 @@ def show_covers():
 	
 def choose_covers():
 	print(_("[W]:Leave cover, [`][0]:Exit"))
-	id = input(_("COVER COMMAND?>"))
+	id = input(_("COVER COMMAND?>")).lower()
 	if id =="`" or id =="0":
 		return False
 	if id =="w":
@@ -294,6 +295,10 @@ def choose_covers():
 	try:
 		id = int(id)
 	except ValueError:
+		print(_("PLEASE INPUT LEGAL COMMAND"))
+		return False
+
+	if id > len(covers):
 		print(_("PLEASE INPUT LEGAL COMMAND"))
 		return False
 		
@@ -925,9 +930,8 @@ def battle_scene(story_id):
 		
 		
 		while 1:
-			cmd = input(_("COMMAND?(LOW CASE)>"))
+			cmd = input(_("COMMAND?(LOW CASE)>")).lower()
 			if cmd:
-				#print_bar("PLAYER ACTION")
 				cmd_char = cmd[0]
 				if command_perform(cmd_char):
 					break
