@@ -50,9 +50,9 @@ def init(story_id):
 	global skills
 	for i in SKILLS:
 		if i[3] or i[3] == 0: #if status is none
-			skills.append(Skill(_(i[0]), i[1], i[2], status[i[3]], i[4]))
+			skills.append(Skill(_(i[0]), _(i[1]), i[2], status[i[3]], i[4]))
 		else:
-			skills.append(Skill(_(i[0]), i[1], i[2], None, i[4]))
+			skills.append(Skill(_(i[0]), _(i[1]), i[2], None, i[4]))
 			
 	for i in SKILLS:
 		if i[3] or i[3] == 0: #if status is none
@@ -848,7 +848,7 @@ def print_final_percent():
 	
 def print_currentweapon(battler, detail=False):
 	if detail:
-		print("{:<3} {:<15} {:<4} {:<4} {:<5} {:<8} {:<6} {:<6}".format("ID", _("NAME"), "DMG", "DPS", "AMMO", "MAX", "CRIT%", "HIT%"))
+		print("{:<}  {:<}\t\t {:<}\t {:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("ID", _("NAME"), _("DMG"), _("RPS"), _("AMMO"), _("MAX"), _("CRIT%"), _("HIT%")))
 	else:
 		print("{:<3} {:<}\t\t {:<}\t {:<}".format("ID", _("NAME"), _("AMMO"), _("MAX")))
 	for j, i in enumerate(battler.weapons): 
@@ -864,7 +864,7 @@ def print_currentweapon(battler, detail=False):
 			print_without_enter(COLORS.RED)
 	
 		if detail:
-			print("[{:<1}] {:<15} {:<4} {:<4} {:<5} {:<8} {:<6} {:<6}".format((j + 1), name, dmg, rps, ammo, max_ammo, i.critical_percent, i.hit_percent_bouns))
+			print("[{:<}] {:<}\t {:<}\t {:<}\t {:<}\t {:<}\t {:<}\t {:<}".format((j + 1), name, dmg, rps, ammo, max_ammo, i.critical_percent, i.hit_percent_bouns))
 			print("    " + i.desc)
 		else:
 			print("[{:<1}] {:<}\t{:<}\t {:<}".format((j + 1), name, ammo, max_ammo))
@@ -888,7 +888,7 @@ def print_skills(battler):
 
 def print_commands():
 	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("[1]-[4]", _("Switch weapon"), "", "", ""))
-	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("", "[W]:" + _("FIRE"), "", "[R]:" + _("RELOAD"), "[I]:INFO"))
+	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("", "[W]:" + _("FIRE"), "", "[R]:" + _("RELOAD"), "[I]:" + _("INFO")))
 	print("{:<}\t {:<}\t {:<}\t {:<}\t {:<}".format("", "[S]:" + _("TAKE COVER"), "", "", ""))
 	if not battlers[0].skills:
 		return
@@ -930,7 +930,7 @@ def battle_scene(story_id):
 		
 		
 		while 1:
-			cmd = input(_("COMMAND?(LOW CASE)>")).lower()
+			cmd = input(_("COMMAND?>")).lower()
 			if cmd:
 				cmd_char = cmd[0]
 				if command_perform(cmd_char):

@@ -350,18 +350,21 @@ STR_ZH = {
 	
 	"MP COST": "消耗",
 	
-	"COMMAND?(LOW CASE)>": "指令？（小写）>",
+	"COMMAND?>": "指令？>",
 	"COVER COMMAND?>": "掩体指令？>",
-	"INVENTORY COMMAND?(LOW CASE)>": "仓库指令？（小写）>",
+	"INVENTORY COMMAND?>": "仓库指令？>",
 	"[NUMBERS]: Equip, [D]: Disarm all, [0]: Exit": "[数字]: 装备, [D]: 解除所有装备, [0]: 退出",
+	"(If disarmed and exit, system will equip recommend weapons.)": "（如果解除了所有装备并退出，系统会自动装备推荐的装备。）",
 	"[No weapon equiped, weapon was equiped automatically.]": "[无武器被装备，已自动装备武器。]",
 	"Equiped %s": "装备了 %s",
+	"All weapon was disarmed.": "解除了所有装备。",
 	
 	"NEXT": "下一步",
 	"INVENTORY": "仓库",
 	"FIRE": "开火",
 	"TAKE COVER": "寻求掩体",
 	"RELOAD": "装填",
+	"INFO": "信息",
 	"[COVER IS BROKEN]": "[掩体损坏]",
 	"[RELOADING]": "[正在装弹]",
 	"[W]:Leave cover, [`][0]:Exit": "[W]:离开掩体, [`][0]:返回",
@@ -376,10 +379,14 @@ STR_ZH = {
 	
 	"FIRE CURSE": "烈火诅咒",
 	"ICE HEAL": "寒冰疗愈",
-	"BOLT": "雷霆冲击",
+	"BOLT": "雷霆震荡",
 	"HEAL": "魔力恢复",
 	"CHMICAL FIRE": "化学烈焰",
 	"SOUL CURSE": "灵魂诅咒",
+	
+	"Burn enemy and keep them burning": "燃烧敌人，并使其持续燃烧",
+	"Heal yourself": "治疗自身",
+	"Shock enemy and reduce hit/evade %": "震撼敌人并降低他们的命中率和回避率",
 	
 	"BURN": "燃烧",
 	"SHOCK": "触电",
@@ -502,7 +509,7 @@ COVERS_3 = [
 SKILLS = [
 	["FIRE CURSE",      "Burn enemy and keep them burning",  80,   0,  15],
 	["ICE HEAL", "Heal yourself",                            0, None, 15],
-	["BOLT",       "Shock enemy and make them can not move", 40,  1,  10],
+	["BOLT",       "Shock enemy and reduce hit/evade %", 40,  1,  10],
 	["HEAL",      "Heal yourself",                           0, None, 30],
 	["CHMICAL FIRE", "",                                      0,   4,  20],
 	["SOUL CURSE",     "",                                   0,    8,  25],

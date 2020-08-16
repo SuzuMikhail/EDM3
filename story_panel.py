@@ -211,10 +211,11 @@ def print_equiped_weapons():
 
 def print_inventory_tips():
 	print(_("[NUMBERS]: Equip, [D]: Disarm all, [0]: Exit"))
+	print(_("(If disarmed and exit, system will equip recommend weapons.)"))
 		
 def choose_weapon():
 	print_inventory_tips()
-	cmd_char = input(_("INVENTORY COMMAND?(LOW CASE)>"))
+	cmd_char = input(_("INVENTORY COMMAND?>"))
 	if cmd_char == "0":
 		return EXIT
 	elif cmd_char == "d":
@@ -253,7 +254,7 @@ def print_main_menu():
 	
 def main_menu():
 	print_main_menu()
-	cmd_char = input(_("COMMAND?(LOW CASE)>")).lower()
+	cmd_char = input(_("COMMAND?>")).lower()
 	if cmd_char == "e":
 		return SCENE_BATTLE
 	elif cmd_char == "i":
