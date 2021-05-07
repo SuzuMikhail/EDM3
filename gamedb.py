@@ -529,7 +529,7 @@ STATUS = [
 	["BERSERK", 150,  0, 0,     True,   0],
 	
 	["CURSED",   10, -10, -10,  True,  -5],
-	["YURI",    150,  10,  10,  True,   6],
+	["YURI",    50,  5,  5,  True,   4], #boss 9/10 used
 ]
 
 

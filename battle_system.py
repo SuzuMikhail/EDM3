@@ -410,20 +410,16 @@ def command_perform(cmd_char):
 		print_playerinfo()
 		return False
 	elif cmd_char =="1":
-		if battler_switch_weapon(battlers[0], 0):
-			return True
+		battler_switch_weapon(battlers[0], 0)
 		return False
 	elif cmd_char =="2":
-		if battler_switch_weapon(battlers[0], 1):
-			return True
+		battler_switch_weapon(battlers[0], 1)
 		return False
 	elif cmd_char =="3":
-		if battler_switch_weapon(battlers[0], 2):
-			return True
+		battler_switch_weapon(battlers[0], 2)
 		return False
 	elif cmd_char =="4":
-		if battler_switch_weapon(battlers[0], 3):
-			return True
+		battler_switch_weapon(battlers[0], 3)
 		return False
 	else:
 		return False
